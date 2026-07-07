@@ -77,8 +77,10 @@
         .cta:hover { box-shadow: 0 0 26px rgba(57,255,200,0.6); transform: translateY(-1px); }
 
         .stats {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
             margin: 56px 0;
+        }
+        .mini-stats {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px;
         }
         .stat {
             background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
@@ -144,9 +146,11 @@
             <div class="mm-row"><span class="mm-name">DT + SMOTE + GridSearch</span><div class="mm-track"><div class="mm-fill" style="width:76%;"></div></div><span class="mm-pct">mid</span></div>
             <div class="mm-row"><span class="mm-name">RF + SMOTE + GridSearch</span><div class="mm-track"><div class="mm-fill" style="width:70%;"></div></div><span class="mm-pct">low</span></div>
         </div>
-        <div class="stat"><p class="stat-num">5</p><p class="stat-label">Attack Categories</p></div>
-        <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Compared</p></div>
-        <div class="stat"><p class="stat-num">41</p><p class="stat-label">Traffic Features</p></div>
+        <div class="mini-stats">
+            <div class="stat"><p class="stat-num">5</p><p class="stat-label">Attack Categories</p></div>
+            <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Compared</p></div>
+            <div class="stat"><p class="stat-num">41</p><p class="stat-label">Traffic Features</p></div>
+        </div>
     </div>
 
     <div class="features">
