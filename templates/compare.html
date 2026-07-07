@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Comparison — PacketGuard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            background: #060A10; color: #D2F5EC; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,255,200,0.025) 0px, rgba(0,255,200,0.025) 1px, transparent 1px, transparent 3px);
+            pointer-events: none; z-index: 1;
+        }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 50px; }
+        nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
+        nav a.active { color: #39FFC8; }
+        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; display: flex; align-items: center; gap: 7px; }
+        .brand svg { flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(57,255,200,0.5)); }
+
+        h1 { font-weight: 700; font-size: 30px; color: #EFFFFA; margin: 0 0 8px; }
+        h1 span { color: #39FFC8; }
+        .subhead { font-size: 12px; color: #6B8B82; margin: 0 0 40px; }
+
+        .card {
+            background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
+            border-radius: 6px; padding: 26px; margin-bottom: 16px;
+        }
+        .card h2 {
+            font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+            color: #4DE8C8; margin: 0 0 14px;
+        }
+        .card p { font-size: 13px; color: #9AA5B1; line-height: 1.7; margin: 0 0 10px; }
+        .card p:last-child { margin-bottom: 0; }
+        .card strong { color: #D2F5EC; }
+
+        .comparison-row {
+            display: flex; justify-content: space-between; font-size: 12px;
+            padding: 10px 0; border-bottom: 1px solid rgba(57,255,200,0.08);
+        }
+        .comparison-row:last-child { border-bottom: none; }
+        .comparison-row .best { color: #39FFC8; font-weight: 600; }
+
+        button {
+            font-family: inherit; font-weight: 600; font-size: 13px; letter-spacing: 0.5px;
+            text-transform: uppercase; background: #39FFC8; color: #04120D; border: none;
+            padding: 12px 24px; border-radius: 4px; cursor: pointer;
+            box-shadow: 0 0 16px rgba(57,255,200,0.4); transition: box-shadow 0.15s, transform 0.1s;
+        }
+        button:hover { box-shadow: 0 0 24px rgba(57,255,200,0.65); transform: translateY(-1px); }
+        .btn-secondary {
+            width: 100%; background: transparent; color: #39FFC8;
+            border: 1px solid rgba(57,255,200,0.35); box-shadow: none;
+        }
+        .btn-secondary:hover { background: rgba(57,255,200,0.06); box-shadow: 0 0 14px rgba(57,255,200,0.2); }
+
+        .glass { position: relative; overflow: hidden; }
+        .scanbar {
+            position: absolute; top: 0; left: -40%; width: 40%; height: 2px;
+            background: linear-gradient(90deg, transparent, #39FFC8, transparent);
+            animation: scan 1.4s linear infinite;
+        }
+        @keyframes scan { from { left: -40%; } to { left: 100%; } }
+        .placeholder { text-align: center; color: #4E6B63; font-size: 13px; padding: 44px 0; }
+
+        .feat-row { margin-bottom: 12px; }
+        .feat-label { display: flex; justify-content: space-between; font-size: 12px; color: #8FB5AC; margin-bottom: 4px; }
+        .conf-track { height: 4px; border-radius: 999px; background: #060A10; overflow: hidden; }
+        .conf-fill { height: 100%; border-radius: 999px; }
+        .chart-title {
+            font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
+            color: #4DE8C8; margin: 0 0 14px; opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <nav>
+        <a href="/" class="brand">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#39FFC8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
+                <circle cx="12" cy="10" r="1.5" fill="#39FFC8" stroke="none"/>
+                <circle cx="9" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
+                <circle cx="15" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
+                <path d="M12 10L9 14.5M12 10L15 14.5" stroke-width="1"/>
+            </svg>
+            PacketGuard
+        </a>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/compare" class="active">Compare</a>
+            <a href="/about">About</a>
+            <a href="/docs">Docs</a>
+        </div>
+    </nav>
+
+    <h1>Model <span>Comparison</span></h1>
+    <p class="subhead">Benchmarking every model tried on NSL-KDD's KDDTest+</p>
+
+    <div class="card">
+        <h2>Results</h2>
+        <div class="comparison-row"><span>Random Forest (baseline)</span><span>74.41%</span></div>
+        <div class="comparison-row"><span>RF + SMOTE + GridSearch</span><span>74.01%</span></div>
+        <div class="comparison-row"><span class="best">Decision Tree + SMOTE ★</span><span class="best">76.65%</span></div>
+        <div class="comparison-row"><span>DT + SMOTE + GridSearch</span><span>74.43%</span></div>
+        <div class="comparison-row"><span>RF + DT Voting Ensemble</span><span>76.27%</span></div>
+    </div>
+
+    <div class="card" style="padding: 14px 24px;">
+        <button class="btn-secondary" onclick="compareModels()">Load Live Benchmark Detail</button>
+    </div>
+
+    <div id="compareOutput"></div>
+</div>
+
+<script>
+async function compareModels() {
+    const compareOutput = document.getElementById("compareOutput");
+    compareOutput.innerHTML = '<div class="glass placeholder card" style="position:relative;"><div class="scanbar"></div>Loading model benchmarks...</div>';
+
+    const response = await fetch("/compare-models");
+    const data = await response.json();
+
+    const best = data.reduce((a, b) => (b.accuracy > a.accuracy ? b : a));
+
+    const rows = data.map(m => {
+        const pct = Math.round(m.accuracy * 100);
+        const isBest = m.method === best.method;
+        const color = isBest ? "#39FFC8" : "#4A6B62";
+        return `
+            <div class="feat-row">
+                <div class="feat-label">
+                    <span>${m.method}${isBest ? " ★ BEST" : ""}</span>
+                    <span>${pct}% acc &nbsp;|&nbsp; R2L recall ${Math.round(m.r2l_recall * 100)}%</span>
+                </div>
+                <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:${color}; ${isBest ? 'box-shadow:0 0 8px rgba(57,255,200,0.6);' : ''}"></div></div>
+            </div>
+        `;
+    }).join("");
+
+    compareOutput.innerHTML = `
+        <div class="card">
+            <p class="chart-title">Model Comparison — NSL-KDD KDDTest+</p>
+            ${rows}
+            <p style="font-size:11px; color:#6B8B62; margin-top:16px; line-height:1.6;">
+                Best overall: <strong style="color:#39FFC8;">${best.method}</strong> — highest accuracy
+                and notably better R2L recall than the RF baseline (2% → ${Math.round(best.r2l_recall*100)}%).
+                All models still show a generalization ceiling on R2L/U2R, a known NSL-KDD limitation
+                since KDDTest+ includes attack subtypes absent from training data.
+            </p>
+        </div>
+    `;
+}
+</script>
+</body>
+</html>

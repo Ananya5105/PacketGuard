@@ -33,21 +33,6 @@
         .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; display: flex; align-items: center; gap: 7px; }
         .brand svg { flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(57,255,200,0.5)); }
 
-        .compare-stat {
-            grid-column: 1 / -1;
-            text-align: left;
-            padding: 22px 24px;
-        }
-        .compare-stat .stat-label { text-align: left; margin-bottom: 14px; }
-        .mm-row { display: flex; align-items: center; gap: 10px; font-size: 11px; margin-bottom: 9px; }
-        .mm-row:last-child { margin-bottom: 0; }
-        .mm-name { width: 168px; color: #8FB5AC; flex-shrink: 0; }
-        .mm-track { flex: 1; height: 6px; border-radius: 999px; background: #0D1419; overflow: hidden; }
-        .mm-fill { height: 100%; border-radius: 999px; background: #2C4A44; }
-        .mm-fill.best { background: #39FFC8; box-shadow: 0 0 8px rgba(57,255,200,0.6); }
-        .mm-pct { width: 34px; text-align: right; color: #6B8B82; flex-shrink: 0; }
-        .mm-pct.best { color: #39FFC8; font-weight: 600; }
-
         .hero-logo { margin: 0 auto 20px; display: flex; justify-content: center; }
         .hero-logo svg { filter: drop-shadow(0 0 10px rgba(57,255,200,0.45)); }
 
@@ -115,6 +100,7 @@
         </a>
         <div>
             <a href="/dashboard">Dashboard</a>
+            <a href="/compare">Compare</a>
             <a href="/about">About</a>
             <a href="/docs">Docs</a>
         </div>
@@ -138,19 +124,14 @@
     </div>
 
     <div class="stats">
-        <div class="stat compare-stat">
-            <p class="stat-label">Model Comparison — NSL-KDD KDDTest+</p>
-            <div class="mm-row"><span class="mm-name">Decision Tree + SMOTE ★</span><div class="mm-track"><div class="mm-fill best" style="width:100%;"></div></div><span class="mm-pct best">best</span></div>
-            <div class="mm-row"><span class="mm-name">RF + DT Voting Ensemble</span><div class="mm-track"><div class="mm-fill" style="width:91%;"></div></div><span class="mm-pct">close</span></div>
-            <div class="mm-row"><span class="mm-name">Random Forest (baseline)</span><div class="mm-track"><div class="mm-fill" style="width:78%;"></div></div><span class="mm-pct">mid</span></div>
-            <div class="mm-row"><span class="mm-name">DT + SMOTE + GridSearch</span><div class="mm-track"><div class="mm-fill" style="width:76%;"></div></div><span class="mm-pct">mid</span></div>
-            <div class="mm-row"><span class="mm-name">RF + SMOTE + GridSearch</span><div class="mm-track"><div class="mm-fill" style="width:70%;"></div></div><span class="mm-pct">low</span></div>
-        </div>
         <div class="mini-stats">
             <div class="stat"><p class="stat-num">5</p><p class="stat-label">Attack Categories</p></div>
             <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Compared</p></div>
             <div class="stat"><p class="stat-num">41</p><p class="stat-label">Traffic Features</p></div>
         </div>
+        <p style="text-align:center; margin-top:16px;">
+            <a href="/compare" style="font-size:12px; color:#39FFC8; text-decoration:none;">See full model comparison →</a>
+        </p>
     </div>
 
     <div class="features">

@@ -233,6 +233,7 @@
     </a>
     <div style="display:flex; gap:20px;">
         <a href="/dashboard" style="color:#D2F5EC; text-decoration:none;">Dashboard</a>
+        <a href="/compare" style="color:#6B8B82; text-decoration:none;">Compare</a>
         <a href="/about" style="color:#6B8B82; text-decoration:none;">About</a>
         <a href="/docs" style="color:#6B8B82; text-decoration:none;">Docs</a>
     </div>
@@ -251,10 +252,6 @@
     </div>
 
     <div class="upload-card glass" style="padding: 14px 24px;">
-         <button class="btn-secondary" onclick="compareModels()">Compare Model Performance</button>
-    </div>
-
-    <div class="upload-card glass" style="padding: 14px 24px;">
         <button class="btn-secondary" onclick="checkAnomalies()">Run Anomaly Detector</button>
     </div>
 
@@ -263,7 +260,6 @@
     </div>
 
     <div id="explainOutput"></div>
-    <div id="compareOutput"></div>
     <div id="anomalyOutput"></div>
 </div>
 
@@ -340,46 +336,7 @@
     }
 
 
-    async function compareModels() {
-    const compareOutput = document.getElementById("compareOutput");
-    compareOutput.innerHTML = '<div class="glass placeholder" style="position:relative;"><div class="scanbar"></div>Loading model benchmarks...</div>';
-
-    const response = await fetch("/compare-models");
-    const data = await response.json();
-
-    const best = data.reduce((a, b) => (b.accuracy > a.accuracy ? b : a));
-
-    const rows = data.map(m => {
-        const pct = Math.round(m.accuracy * 100);
-        const isBest = m.method === best.method;
-        const color = isBest ? "#39FFC8" : "#4A6B62";
-        return `
-            <div class="feat-row">
-                <div class="feat-label">
-                    <span>${m.method}${isBest ? " ★ BEST" : ""}</span>
-                    <span>${pct}% acc &nbsp;|&nbsp; R2L recall ${Math.round(m.r2l_recall * 100)}%</span>
-                </div>
-                <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:${color}; ${isBest ? 'box-shadow:0 0 8px rgba(57,255,200,0.6);' : ''}"></div></div>
-            </div>
-        `;
-    }).join("");
-
-    compareOutput.innerHTML = `
-        <div class="chart-card glass">
-            <p class="chart-title">Model Comparison — NSL-KDD KDDTest+</p>
-            ${rows}
-            <p style="font-size:11px; color:#6B8B62; margin-top:16px; line-height:1.6;">
-                Best overall: <strong style="color:#39FFC8;">${best.method}</strong> — highest accuracy
-                and notably better R2L recall than the RF baseline (2% → ${Math.round(best.r2l_recall*100)}%).
-                All models still show a generalization ceiling on R2L/U2R, a known NSL-KDD limitation
-                since KDDTest+ includes attack subtypes absent from training data.
-            </p>
-        </div>
-    `;
-}
-
-
-async function checkAnomalies() {
+    async function checkAnomalies() {
     const fileInput = document.getElementById("csvFile");
     const file = fileInput.files[0];
     const anomalyOutput = document.getElementById("anomalyOutput");

@@ -46,6 +46,11 @@ def dashboard():
     return render_template("index.html")
 
 
+@app.route("/compare")
+def compare():
+    return render_template("compare.html")
+
+
 @app.route("/about")
 def about():
     return render_template("about.html")
