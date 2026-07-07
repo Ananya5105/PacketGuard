@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PacketGuard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'JetBrains Mono', monospace;
+            background: #060A10;
+            color: #D2F5EC;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,255,200,0.025) 0px,
+                rgba(0,255,200,0.025) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+        body {
+            padding: 56px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .wrap { width: 100%; max-width: 720px; position: relative; z-index: 2; }
+
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #4DE8C8;
+            text-align: center;
+            margin: 0 0 8px;
+            opacity: 0.75;
+        }
+        .eyebrow::before { content: "// "; }
+        .eyebrow::after { content: " //"; }
+
+        h1 {
+            font-weight: 700;
+            font-size: 38px;
+            text-align: center;
+            margin: 0 0 8px;
+            letter-spacing: 1px;
+            color: #EFFFFA;
+            text-shadow: 0 0 18px rgba(57,255,200,0.35);
+        }
+        h1 span { color: #39FFC8; }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 28px;
+            background: #39FFC8;
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blink 1.1s steps(1) infinite;
+            box-shadow: 0 0 10px #39FFC8;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .subhead {
+            text-align: center;
+            font-size: 12px;
+            color: #4E6B63;
+            margin: 0 0 32px;
+        }
+
+        .glass {
+            background: rgba(13,20,26,0.85);
+            border: 1px solid rgba(57,255,200,0.15);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-card {
+            padding: 22px 24px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        input[type="file"] {
+            flex: 1;
+            min-width: 180px;
+            font-family: inherit;
+            font-size: 12px;
+            color: #8FB5AC;
+            padding: 11px 14px;
+            border-radius: 4px;
+            border: 1px solid rgba(57,255,200,0.2);
+            background: #060A10;
+        }
+        button {
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: #39FFC8;
+            color: #04120D;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 16px rgba(57,255,200,0.4);
+            transition: box-shadow 0.15s, transform 0.1s;
+        }
+        button:hover { box-shadow: 0 0 24px rgba(57,255,200,0.65); transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        .btn-secondary {
+            width: 100%;
+            background: transparent;
+            color: #39FFC8;
+            border: 1px solid rgba(57,255,200,0.35);
+            box-shadow: none;
+        }
+        .btn-secondary:hover { background: rgba(57,255,200,0.06); box-shadow: 0 0 14px rgba(57,255,200,0.2); }
+
+        .scanbar {
+            position: absolute;
+            top: 0; left: -40%;
+            width: 40%; height: 2px;
+            background: linear-gradient(90deg, transparent, #39FFC8, transparent);
+            animation: scan 1.4s linear infinite;
+        }
+        @keyframes scan { from { left: -40%; } to { left: 100%; } }
+
+        .summary-card {
+            padding: 26px 28px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        .summary-card.glow-clear { box-shadow: 0 0 0 1px rgba(76,183,130,0.2), 0 0 24px rgba(76,183,130,0.12); }
+        .summary-card.glow-elevated { box-shadow: 0 0 0 1px rgba(217,164,65,0.25), 0 0 24px rgba(217,164,65,0.15); }
+        .summary-card.glow-high { box-shadow: 0 0 0 1px rgba(255,80,80,0.3), 0 0 28px rgba(255,80,80,0.2); }
+
+        .gauge-wrap { position: relative; width: 88px; height: 88px; flex-shrink: 0; }
+        .gauge-wrap svg { transform: rotate(-90deg); }
+        .gauge-pct {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 17px; color: #EFFFFA;
+        }
+        .gauge-status { font-weight: 700; font-size: 16px; margin: 0 0 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .gauge-detail { font-size: 12px; color: #6B8B82; margin: 0; }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .chart-card { padding: 20px; }
+        .chart-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #4DE8C8;
+            margin: 0 0 14px;
+            opacity: 0.8;
+        }
+        .chart-box { position: relative; height: 180px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .cat-card { padding: 18px; position: relative; }
+        .icon-sq {
+            width: 38px; height: 38px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 12px;
+        }
+        .cat-name { font-weight: 600; font-size: 13px; margin: 0 0 2px; color: #EFFFFA; text-transform: uppercase; letter-spacing: 0.5px; }
+        .cat-count { font-weight: 700; font-size: 26px; margin: 0 0 10px; color: #EFFFFA; }
+        .conf-label { font-size: 10px; color: #6B8B82; display: flex; justify-content: space-between; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .conf-track { height: 4px; border-radius: 999px; background: #060A10; overflow: hidden; }
+        .conf-fill { height: 100%; border-radius: 999px; }
+        .severity {
+            position: absolute; top: 16px; right: 16px;
+            font-size: 9px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+            padding: 3px 8px; border-radius: 3px;
+        }
+
+        .feat-row { margin-bottom: 12px; }
+        .feat-label {
+            display: flex; justify-content: space-between;
+            font-size: 12px; color: #8FB5AC; margin-bottom: 4px;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #4E6B63;
+            font-size: 13px;
+            padding: 44px 0;
+        }
+        .placeholder::before { content: "> "; color: #39FFC8; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <p class="eyebrow">Network Intrusion Detection</p>
+    <h1>Packet<span>Guard</span><span class="cursor"></span></h1>
+    <p class="subhead">real-time traffic classification engine</p>
+
+    <div class="upload-card glass">
+        <input type="file" id="csvFile" accept=".csv,.txt">
+        <button onclick="uploadFile()">Analyze Traffic</button>
+    </div>
+
+    <div class="upload-card glass" style="padding: 14px 24px;">
+        <button class="btn-secondary" onclick="explainFile()">See What The Model Looks At</button>
+    </div>
+
+    <div class="upload-card glass" style="padding: 14px 24px;">
+         <button class="btn-secondary" onclick="compareModels()">Compare Model Performance</button>
+    </div>
+
+    <div class="upload-card glass" style="padding: 14px 24px;">
+        <button class="btn-secondary" onclick="checkAnomalies()">Run Anomaly Detector</button>
+    </div>
+
+    <div id="output">
+        <div class="glass placeholder">Upload a traffic file to see the breakdown</div>
+    </div>
+
+    <div id="explainOutput"></div>
+    <div id="compareOutput"></div>
+    <div id="anomalyOutput"></div>
+</div>
+
+<script>
+    let doughnutChart = null;
+    let barChart = null;
+
+    const categoryMeta = {
+        "Normal": { color: "#4CB782", severity: "None",     icon: "M6 12l4 4 8-8" },
+        "DoS":    { color: "#FF5C4D", severity: "Medium",   icon: "M12 3v10M12 17v.01M4 12a8 8 0 1116 0" },
+        "Probe":  { color: "#E8B93F", severity: "Low",      icon: "M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 3" },
+        "R2L":    { color: "#39FFC8", severity: "High",     icon: "M7 11V7a5 5 0 0110 0v4M5 11h14v9H5z" },
+        "U2R":    { color: "#FF4D9E", severity: "Critical", icon: "M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z" }
+    };
+
+    async function uploadFile() {
+        const fileInput = document.getElementById("csvFile");
+        const file = fileInput.files[0];
+        const output = document.getElementById("output");
+        if (!file) {
+            output.innerHTML = '<div class="glass placeholder">Choose a file first</div>';
+            return;
+        }
+
+        output.innerHTML = '<div class="glass placeholder" style="position:relative;"><div class="scanbar"></div>Analyzing traffic...</div>';
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch("/predict", { method: "POST", body: formData });
+        const data = await response.json();
+
+        if (data.error) {
+            output.innerHTML = `<div class="glass placeholder">${data.error}</div>`;
+            return;
+        }
+
+        renderResults(data.predictions, data.confidences || []);
+    }
+
+    async function explainFile() {
+        const explainOutput = document.getElementById("explainOutput");
+        explainOutput.innerHTML = '<div class="glass placeholder" style="position:relative;"><div class="scanbar"></div>Reading model weights...</div>';
+
+        const response = await fetch("/explain");
+        const data = await response.json();
+
+        if (data.error) {
+            explainOutput.innerHTML = `<div class="glass placeholder">${data.error}</div>`;
+            return;
+        }
+
+        const maxImp = Math.max(...data.top_features.map(f => f.importance));
+        const rows = data.top_features.map(f => {
+            const pct = Math.round((f.importance / maxImp) * 100);
+            const cleanName = f.feature.replace("num__", "").replace("cat__", "").replace(/_/g, " ");
+            return `
+                <div class="feat-row">
+                    <div class="feat-label">
+                        <span>${cleanName}</span>
+                        <span>${(f.importance * 100).toFixed(1)}%</span>
+                    </div>
+                    <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:#39FFC8; box-shadow:0 0 8px rgba(57,255,200,0.6);"></div></div>
+                </div>
+            `;
+        }).join("");
+
+        explainOutput.innerHTML = `
+            <div class="chart-card glass">
+                <p class="chart-title">What This Model Relies On Most</p>
+                ${rows}
+            </div>
+        `;
+    }
+
+
+    async function compareModels() {
+    const compareOutput = document.getElementById("compareOutput");
+    compareOutput.innerHTML = '<div class="glass placeholder" style="position:relative;"><div class="scanbar"></div>Loading model benchmarks...</div>';
+
+    const response = await fetch("/compare-models");
+    const data = await response.json();
+
+    const best = data.reduce((a, b) => (b.accuracy > a.accuracy ? b : a));
+
+    const rows = data.map(m => {
+        const pct = Math.round(m.accuracy * 100);
+        const isBest = m.method === best.method;
+        const color = isBest ? "#39FFC8" : "#4A6B62";
+        return `
+            <div class="feat-row">
+                <div class="feat-label">
+                    <span>${m.method}${isBest ? " ★ BEST" : ""}</span>
+                    <span>${pct}% acc &nbsp;|&nbsp; R2L recall ${Math.round(m.r2l_recall * 100)}%</span>
+                </div>
+                <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:${color}; ${isBest ? 'box-shadow:0 0 8px rgba(57,255,200,0.6);' : ''}"></div></div>
+            </div>
+        `;
+    }).join("");
+
+    compareOutput.innerHTML = `
+        <div class="chart-card glass">
+            <p class="chart-title">Model Comparison — NSL-KDD KDDTest+</p>
+            ${rows}
+            <p style="font-size:11px; color:#6B8B62; margin-top:16px; line-height:1.6;">
+                Best overall: <strong style="color:#39FFC8;">${best.method}</strong> — highest accuracy
+                and notably better R2L recall than the RF baseline (2% → ${Math.round(best.r2l_recall*100)}%).
+                All models still show a generalization ceiling on R2L/U2R, a known NSL-KDD limitation
+                since KDDTest+ includes attack subtypes absent from training data.
+            </p>
+        </div>
+    `;
+}
+
+
+async function checkAnomalies() {
+    const fileInput = document.getElementById("csvFile");
+    const file = fileInput.files[0];
+    const anomalyOutput = document.getElementById("anomalyOutput");
+    if (!file) {
+        anomalyOutput.innerHTML = '<div class="glass placeholder">Choose a file first</div>';
+        return;
+    }
+
+    anomalyOutput.innerHTML = '<div class="glass placeholder" style="position:relative;"><div class="scanbar"></div>Running unsupervised anomaly scan...</div>';
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/anomaly-check", { method: "POST", body: formData });
+    const data = await response.json();
+
+    if (data.error) {
+        anomalyOutput.innerHTML = `<div class="glass placeholder">${data.error}</div>`;
+        return;
+    }
+
+    const pct = Math.round((data.anomalies_flagged / data.total) * 100);
+
+    anomalyOutput.innerHTML = `
+        <div class="chart-card glass">
+            <p class="chart-title">Unsupervised Anomaly Scan (Isolation Forest)</p>
+            <p style="font-size:13px; color:#8FB5AC; margin: 0 0 14px;">
+                <strong style="color:#39FFC8; font-size:20px;">${data.anomalies_flagged} / ${data.total}</strong>
+                flows (${pct}%) flagged as statistically abnormal — independent of the category classifier above.
+            </p>
+            <p style="font-size:11px; color:#6B8B62; line-height:1.6;">
+                This model doesn't name an attack type — it only flags traffic that deviates from
+                normal patterns, so it can catch novel attacks the classifier was never trained on.
+                In testing, this approach reached ~73% recall on real attacks vs. the classifier's
+                much lower recall on rare categories like R2L — at the cost of not knowing exactly
+                what kind of attack it is.
+            </p>
+        </div>
+    `;
+}
+
+    function renderResults(predictions, confidences) {
+        const total = predictions.length;
+        const malicious = predictions.filter(p => p !== "Normal").length;
+        const pct = total ? Math.round((malicious / total) * 100) : 0;
+
+        let statusLabel, statusColor, glowClass;
+        if (pct === 0) { statusLabel = "Clear"; statusColor = "#4CB782"; glowClass = "glow-clear"; }
+        else if (pct < 40) { statusLabel = "Elevated"; statusColor = "#E8B93F"; glowClass = "glow-elevated"; }
+        else { statusLabel = "High Risk"; statusColor = "#FF5C4D"; glowClass = "glow-high"; }
+
+        const r = 36;
+        const circumference = 2 * Math.PI * r;
+        const offset = circumference - (pct / 100) * circumference;
+
+        const counts = {};
+        const confSums = {};
+        predictions.forEach((p, i) => {
+            counts[p] = (counts[p] || 0) + 1;
+            confSums[p] = (confSums[p] || 0) + (confidences[i] !== undefined ? confidences[i] : 1);
+        });
+
+        const cardsHtml = Object.entries(counts).map(([cat, count]) => {
+            const meta = categoryMeta[cat] || { color: "#6B8B82", severity: "Unknown", icon: "M12 4v16" };
+            const avgConf = Math.round((confSums[cat] / count) * 100);
+            return `
+                <div class="cat-card glass">
+                    ${meta.severity !== "None" ? `<span class="severity" style="background:${meta.color}22;color:${meta.color}">${meta.severity}</span>` : ""}
+                    <div class="icon-sq" style="background:${meta.color}22">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${meta.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="${meta.icon}"/>
+                        </svg>
+                    </div>
+                    <p class="cat-name">${cat}</p>
+                    <p class="cat-count">${count}</p>
+                    <div class="conf-label"><span>Confidence</span><span>${avgConf}%</span></div>
+                    <div class="conf-track"><div class="conf-fill" style="width:${avgConf}%;background:${meta.color};box-shadow:0 0 8px ${meta.color}88;"></div></div>
+                </div>
+            `;
+        }).join("");
+
+        document.getElementById("output").innerHTML = `
+            <div class="summary-card glass ${glowClass}">
+                <div class="gauge-wrap">
+                    <svg width="88" height="88" viewBox="0 0 88 88">
+                        <circle cx="44" cy="44" r="${r}" fill="none" stroke="#1A2622" stroke-width="8"/>
+                        <circle cx="44" cy="44" r="${r}" fill="none" stroke="${statusColor}" stroke-width="8"
+                            stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round"
+                            style="filter: drop-shadow(0 0 6px ${statusColor});"/>
+                    </svg>
+                    <div class="gauge-pct">${pct}%</div>
+                </div>
+                <div>
+                    <p class="gauge-status" style="color:${statusColor}">${statusLabel}</p>
+                    <p class="gauge-detail">${malicious} of ${total} flows flagged as non-normal</p>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-card glass">
+                    <p class="chart-title">Category Breakdown</p>
+                    <div class="chart-box"><canvas id="doughnutChart"></canvas></div>
+                </div>
+                <div class="chart-card glass">
+                    <p class="chart-title">Avg Confidence By Class</p>
+                    <div class="chart-box"><canvas id="barChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="grid">${cardsHtml}</div>
+        `;
+
+        const labels = Object.keys(counts);
+        const values = Object.values(counts);
+        const colors = labels.map(l => (categoryMeta[l] || {}).color || "#6B8B82");
+        const avgConfs = labels.map(l => Math.round((confSums[l] / counts[l]) * 100));
+
+        if (doughnutChart) doughnutChart.destroy();
+        if (barChart) barChart.destroy();
+
+        doughnutChart = new Chart(document.getElementById("doughnutChart").getContext("2d"), {
+            type: "doughnut",
+            data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }] },
+            options: {
+                plugins: { legend: { position: "bottom", labels: { font: { size: 10, family: "'JetBrains Mono'" }, color: "#8FB5AC", boxWidth: 8 } } }
+            }
+        });
+
+        barChart = new Chart(document.getElementById("barChart").getContext("2d"), {
+            type: "bar",
+            data: { labels, datasets: [{ data: avgConfs, backgroundColor: colors, borderRadius: 3 }] },
+            options: {
+                indexAxis: "y",
+                scales: {
+                    x: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'JetBrains Mono'" } } },
+                    y: { grid: { display: false }, ticks: { color: "#8FB5AC", font: { size: 10, family: "'JetBrains Mono'" } } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+</script>
+</body>
+</html>
