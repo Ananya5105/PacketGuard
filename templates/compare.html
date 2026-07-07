@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Model Comparison — PacketGuard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -75,6 +76,14 @@
             font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
             color: #4DE8C8; margin: 0 0 14px; opacity: 0.8;
         }
+        .charts-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
+        }
+        .chart-card { padding: 20px; }
+        .chart-box { position: relative; height: 220px; }
+        @media (max-width: 560px) {
+            .charts-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -110,51 +119,117 @@
         <div class="comparison-row"><span>RF + DT Voting Ensemble</span><span>76.27%</span></div>
     </div>
 
+    <div class="charts-row">
+        <div class="chart-card glass card">
+            <p class="chart-title">Accuracy By Model</p>
+            <div class="chart-box"><canvas id="accChart"></canvas></div>
+        </div>
+        <div class="chart-card glass card">
+            <p class="chart-title">Accuracy, Precision, Recall &amp; F1</p>
+            <div class="chart-box"><canvas id="metricsChart"></canvas></div>
+        </div>
+    </div>
+
     <div class="card" style="padding: 14px 24px;">
-        <button class="btn-secondary" onclick="compareModels()">Load Live Benchmark Detail</button>
+        <button class="btn-secondary" onclick="compareModels()">Refresh Live Benchmark Detail</button>
     </div>
 
     <div id="compareOutput"></div>
 </div>
 
 <script>
-async function compareModels() {
-    const compareOutput = document.getElementById("compareOutput");
-    compareOutput.innerHTML = '<div class="glass placeholder card" style="position:relative;"><div class="scanbar"></div>Loading model benchmarks...</div>';
+    let accChart = null;
+    let metricsChart = null;
 
-    const response = await fetch("/compare-models");
-    const data = await response.json();
+    function renderCharts(data) {
+        const labels = data.map(m => m.method);
+        const accuracies = data.map(m => Math.round(m.accuracy * 1000) / 10);
+        const maxAcc = Math.max(...data.map(m => m.accuracy));
+        const colors = data.map(m => m.accuracy === maxAcc ? "#39FFC8" : "#2C4A44");
 
-    const best = data.reduce((a, b) => (b.accuracy > a.accuracy ? b : a));
+        if (accChart) accChart.destroy();
+        accChart = new Chart(document.getElementById("accChart").getContext("2d"), {
+            type: "bar",
+            data: {
+                labels,
+                datasets: [{ label: "Accuracy %", data: accuracies, backgroundColor: colors, borderRadius: 3 }]
+            },
+            options: {
+                indexAxis: "y",
+                scales: {
+                    x: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'JetBrains Mono'" } } },
+                    y: { grid: { display: false }, ticks: { color: "#8FB5AC", font: { size: 9, family: "'JetBrains Mono'" } } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
 
-    const rows = data.map(m => {
-        const pct = Math.round(m.accuracy * 100);
-        const isBest = m.method === best.method;
-        const color = isBest ? "#39FFC8" : "#4A6B62";
-        return `
-            <div class="feat-row">
-                <div class="feat-label">
-                    <span>${m.method}${isBest ? " ★ BEST" : ""}</span>
-                    <span>${pct}% acc &nbsp;|&nbsp; R2L recall ${Math.round(m.r2l_recall * 100)}%</span>
+        if (metricsChart) metricsChart.destroy();
+        metricsChart = new Chart(document.getElementById("metricsChart").getContext("2d"), {
+            type: "bar",
+            data: {
+                labels,
+                datasets: [
+                    { label: "Accuracy", data: data.map(m => Math.round(m.accuracy * 1000) / 10), backgroundColor: "#39FFC8" },
+                    { label: "Precision", data: data.map(m => Math.round(m.precision * 1000) / 10), backgroundColor: "#4DE8C8" },
+                    { label: "Recall", data: data.map(m => Math.round(m.recall * 1000) / 10), backgroundColor: "#2C4A44" },
+                    { label: "F1", data: data.map(m => Math.round(m.f1 * 1000) / 10), backgroundColor: "#6B8B82" }
+                ]
+            },
+            options: {
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: "#6B8B82", font: { size: 8, family: "'JetBrains Mono'" } } },
+                    y: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'JetBrains Mono'" } } }
+                },
+                plugins: {
+                    legend: { position: "bottom", labels: { color: "#8FB5AC", font: { size: 9, family: "'JetBrains Mono'" }, boxWidth: 8 } }
+                }
+            }
+        });
+    }
+
+    async function compareModels() {
+        const compareOutput = document.getElementById("compareOutput");
+        compareOutput.innerHTML = '<div class="glass placeholder card" style="position:relative;"><div class="scanbar"></div>Loading model benchmarks...</div>';
+
+        const response = await fetch("/compare-models");
+        const data = await response.json();
+
+        renderCharts(data);
+
+        const best = data.reduce((a, b) => (b.accuracy > a.accuracy ? b : a));
+
+        const rows = data.map(m => {
+            const pct = Math.round(m.accuracy * 100);
+            const isBest = m.method === best.method;
+            const color = isBest ? "#39FFC8" : "#4A6B62";
+            return `
+                <div class="feat-row">
+                    <div class="feat-label">
+                        <span>${m.method}${isBest ? " ★ BEST" : ""}</span>
+                        <span>${pct}% acc &nbsp;|&nbsp; R2L recall ${Math.round(m.r2l_recall * 100)}%</span>
+                    </div>
+                    <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:${color}; ${isBest ? 'box-shadow:0 0 8px rgba(57,255,200,0.6);' : ''}"></div></div>
                 </div>
-                <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:${color}; ${isBest ? 'box-shadow:0 0 8px rgba(57,255,200,0.6);' : ''}"></div></div>
+            `;
+        }).join("");
+
+        compareOutput.innerHTML = `
+            <div class="card">
+                <p class="chart-title">Model Comparison — NSL-KDD KDDTest+</p>
+                ${rows}
+                <p style="font-size:11px; color:#6B8B62; margin-top:16px; line-height:1.6;">
+                    Best overall: <strong style="color:#39FFC8;">${best.method}</strong> — highest accuracy
+                    and notably better R2L recall than the RF baseline (2% → ${Math.round(best.r2l_recall*100)}%).
+                    All models still show a generalization ceiling on R2L/U2R, a known NSL-KDD limitation
+                    since KDDTest+ includes attack subtypes absent from training data.
+                </p>
             </div>
         `;
-    }).join("");
+    }
 
-    compareOutput.innerHTML = `
-        <div class="card">
-            <p class="chart-title">Model Comparison — NSL-KDD KDDTest+</p>
-            ${rows}
-            <p style="font-size:11px; color:#6B8B62; margin-top:16px; line-height:1.6;">
-                Best overall: <strong style="color:#39FFC8;">${best.method}</strong> — highest accuracy
-                and notably better R2L recall than the RF baseline (2% → ${Math.round(best.r2l_recall*100)}%).
-                All models still show a generalization ceiling on R2L/U2R, a known NSL-KDD limitation
-                since KDDTest+ includes attack subtypes absent from training data.
-            </p>
-        </div>
-    `;
-}
+    // Load charts and detail automatically on page load
+    compareModels();
 </script>
 </body>
 </html>
