@@ -37,10 +37,9 @@ feature_cols = [
     "dst_host_rerror_rate", "dst_host_srv_rerror_rate",
 ]
 
-
 @app.route("/")
 def home():
-    return "PacketGuard API is running"
+    return render_template("index.html")
 
 
 @app.route("/dashboard")
