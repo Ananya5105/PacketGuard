@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About — PacketGuard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            background: #060A10; color: #D2F5EC; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,255,200,0.025) 0px, rgba(0,255,200,0.025) 1px, transparent 1px, transparent 3px);
+            pointer-events: none; z-index: 1;
+        }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 50px; }
+        nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
+        nav a.active { color: #39FFC8; }
+        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
+
+        h1 { font-weight: 700; font-size: 30px; color: #EFFFFA; margin: 0 0 8px; }
+        h1 span { color: #39FFC8; }
+        .subhead { font-size: 12px; color: #6B8B82; margin: 0 0 40px; }
+
+        .card {
+            background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
+            border-radius: 6px; padding: 26px; margin-bottom: 16px;
+        }
+        .card h2 {
+            font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+            color: #4DE8C8; margin: 0 0 14px;
+        }
+        .card p { font-size: 13px; color: #9AA5B1; line-height: 1.7; margin: 0 0 10px; }
+        .card p:last-child { margin-bottom: 0; }
+        .card strong { color: #D2F5EC; }
+
+        .comparison-row {
+            display: flex; justify-content: space-between; font-size: 12px;
+            padding: 10px 0; border-bottom: 1px solid rgba(57,255,200,0.08);
+        }
+        .comparison-row:last-child { border-bottom: none; }
+        .comparison-row .best { color: #39FFC8; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <nav>
+        <a href="/" class="brand">PacketGuard</a>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/about" class="active">About</a>
+            <a href="/docs">Docs</a>
+        </div>
+    </nav>
+
+    <h1>About <span>PacketGuard</span></h1>
+    <p class="subhead">Network intrusion detection mini-project</p>
+
+    <div class="card">
+        <h2>What This Is</h2>
+        <p>PacketGuard classifies network traffic into <strong>Normal</strong>, <strong>DoS</strong>,
+        <strong>Probe</strong>, <strong>R2L</strong>, and <strong>U2R</strong> categories using
+        machine learning trained on the <strong>NSL-KDD</strong> dataset — a standard academic
+        benchmark for intrusion detection research.</p>
+        <p>Rather than just training a model and reporting an accuracy number, this project builds
+        a full interactive tool: live classification, model comparison, explainability, and an
+        unsupervised anomaly detection path.</p>
+    </div>
+
+    <div class="card">
+        <h2>Model Comparison Results</h2>
+        <div class="comparison-row"><span>Random Forest (baseline)</span><span>74.41%</span></div>
+        <div class="comparison-row"><span>RF + SMOTE + GridSearch</span><span>74.01%</span></div>
+        <div class="comparison-row"><span class="best">Decision Tree + SMOTE ★</span><span class="best">76.65%</span></div>
+        <div class="comparison-row"><span>DT + SMOTE + GridSearch</span><span>74.43%</span></div>
+        <div class="comparison-row"><span>RF + DT Voting Ensemble</span><span>76.27%</span></div>
+    </div>
+
+    <div class="card">
+        <h2>Key Finding</h2>
+        <p>R2L and U2R attack recall stays low across every model tested (2-12%), even after SMOTE
+        oversampling and hyperparameter tuning. Feature importance analysis showed models lean on
+        traffic-volume features (byte counts, connection counts) rather than login/content features
+        that R2L attacks actually depend on — indicating a data-level generalization ceiling rather
+        than a tuning problem, since KDDTest+ intentionally includes attack subtypes absent from
+        training data.</p>
+    </div>
+
+    <div class="card">
+        <h2>Tech Stack</h2>
+        <p>Python, scikit-learn, Flask, Chart.js. Trained on NSL-KDD's KDDTrain+/KDDTest+ split.
+        Deployed on Render.</p>
+    </div>
+</div>
+</body>
+</html>

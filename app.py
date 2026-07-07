@@ -42,9 +42,24 @@ def home():
     return render_template("index.html")
 
 
+@app.route("/")
+def home():
+    return render_template("landing.html")
+
+
 @app.route("/dashboard")
 def dashboard():
     return render_template("index.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@app.route("/docs")
+def docs():
+    return render_template("docs.html")
 
 
 @app.route("/predict", methods=["POST"])

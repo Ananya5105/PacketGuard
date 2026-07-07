@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docs — PacketGuard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            background: #060A10; color: #D2F5EC; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,255,200,0.025) 0px, rgba(0,255,200,0.025) 1px, transparent 1px, transparent 3px);
+            pointer-events: none; z-index: 1;
+        }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 50px; }
+        nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
+        nav a.active { color: #39FFC8; }
+        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
+
+        h1 { font-weight: 700; font-size: 30px; color: #EFFFFA; margin: 0 0 8px; }
+        h1 span { color: #39FFC8; }
+        .subhead { font-size: 12px; color: #6B8B82; margin: 0 0 40px; }
+
+        .card {
+            background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
+            border-radius: 6px; padding: 26px; margin-bottom: 16px;
+        }
+        .card h2 {
+            font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+            color: #4DE8C8; margin: 0 0 14px;
+        }
+        .card p { font-size: 13px; color: #9AA5B1; line-height: 1.7; margin: 0 0 10px; }
+
+        .endpoint {
+            display: flex; gap: 10px; align-items: center; margin-bottom: 12px;
+            font-size: 12px;
+        }
+        .method {
+            background: rgba(57,255,200,0.12); color: #39FFC8; font-weight: 600;
+            padding: 3px 8px; border-radius: 3px; font-size: 10px;
+        }
+        .path { color: #D2F5EC; }
+        .desc { color: #6B8B82; font-size: 11px; margin-left: auto; }
+
+        .cat-row {
+            display: flex; justify-content: space-between; font-size: 12px;
+            padding: 10px 0; border-bottom: 1px solid rgba(57,255,200,0.08);
+        }
+        .cat-row:last-child { border-bottom: none; }
+        .cat-name { color: #D2F5EC; font-weight: 600; }
+        .cat-desc { color: #6B8B82; text-align: right; max-width: 60%; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <nav>
+        <a href="/" class="brand">PacketGuard</a>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/about">About</a>
+            <a href="/docs" class="active">Docs</a>
+        </div>
+    </nav>
+
+    <h1>Docs</h1>
+    <p class="subhead">How to use PacketGuard</p>
+
+    <div class="card">
+        <h2>Getting Started</h2>
+        <p>Go to the Dashboard, upload a CSV of network traffic in NSL-KDD format (41 feature
+        columns, no header row), and click Analyze Traffic. Results appear as a risk gauge,
+        category breakdown, and per-category confidence.</p>
+    </div>
+
+    <div class="card">
+        <h2>Attack Categories</h2>
+        <div class="cat-row"><span class="cat-name">Normal</span><span class="cat-desc">Legitimate traffic, no attack detected</span></div>
+        <div class="cat-row"><span class="cat-name">DoS</span><span class="cat-desc">Denial of Service — flooding to overwhelm a target</span></div>
+        <div class="cat-row"><span class="cat-name">Probe</span><span class="cat-desc">Reconnaissance/scanning — mapping the network before an attack</span></div>
+        <div class="cat-row"><span class="cat-name">R2L</span><span class="cat-desc">Remote to Local — unauthorized access attempt from outside</span></div>
+        <div class="cat-row"><span class="cat-name">U2R</span><span class="cat-desc">User to Root — privilege escalation on an already-accessed system</span></div>
+    </div>
+
+    <div class="card">
+        <h2>API Endpoints</h2>
+        <div class="endpoint"><span class="method">POST</span><span class="path">/predict</span><span class="desc">Classify uploaded traffic</span></div>
+        <div class="endpoint"><span class="method">GET</span><span class="path">/explain</span><span class="desc">Global feature importance</span></div>
+        <div class="endpoint"><span class="method">GET</span><span class="path">/compare-models</span><span class="desc">Model benchmark results</span></div>
+        <div class="endpoint"><span class="method">POST</span><span class="path">/anomaly-check</span><span class="desc">Isolation Forest anomaly scan</span></div>
+    </div>
+</div>
+</body>
+</html>
