@@ -30,7 +30,23 @@
         nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 80px; }
         nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
         nav a.active { color: #39FFC8; }
-        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
+        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; display: flex; align-items: center; gap: 7px; }
+        .brand svg { flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(57,255,200,0.5)); }
+
+        .compare-stat {
+            grid-column: 1 / -1;
+            text-align: left;
+            padding: 22px 24px;
+        }
+        .compare-stat .stat-label { text-align: left; margin-bottom: 14px; }
+        .mm-row { display: flex; align-items: center; gap: 10px; font-size: 11px; margin-bottom: 9px; }
+        .mm-row:last-child { margin-bottom: 0; }
+        .mm-name { width: 168px; color: #8FB5AC; flex-shrink: 0; }
+        .mm-track { flex: 1; height: 6px; border-radius: 999px; background: #0D1419; overflow: hidden; }
+        .mm-fill { height: 100%; border-radius: 999px; background: #2C4A44; }
+        .mm-fill.best { background: #39FFC8; box-shadow: 0 0 8px rgba(57,255,200,0.6); }
+        .mm-pct { width: 34px; text-align: right; color: #6B8B82; flex-shrink: 0; }
+        .mm-pct.best { color: #39FFC8; font-weight: 600; }
 
         .hero { text-align: center; margin-bottom: 60px; }
         .eyebrow {
@@ -82,7 +98,16 @@
 <body>
 <div class="wrap">
     <nav>
-        <a href="/" class="brand">PacketGuard</a>
+        <a href="/" class="brand">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#39FFC8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
+                <circle cx="12" cy="10" r="1.5" fill="#39FFC8" stroke="none"/>
+                <circle cx="9" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
+                <circle cx="15" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
+                <path d="M12 10L9 14.5M12 10L15 14.5" stroke-width="1"/>
+            </svg>
+            PacketGuard
+        </a>
         <div>
             <a href="/dashboard">Dashboard</a>
             <a href="/about">About</a>
@@ -99,7 +124,14 @@
     </div>
 
     <div class="stats">
-        <div class="stat"><p class="stat-num">76.65%</p><p class="stat-label">Best Accuracy</p></div>
+        <div class="stat compare-stat">
+            <p class="stat-label">Model Comparison — NSL-KDD KDDTest+</p>
+            <div class="mm-row"><span class="mm-name">Decision Tree + SMOTE ★</span><div class="mm-track"><div class="mm-fill best" style="width:100%;"></div></div><span class="mm-pct best">best</span></div>
+            <div class="mm-row"><span class="mm-name">RF + DT Voting Ensemble</span><div class="mm-track"><div class="mm-fill" style="width:91%;"></div></div><span class="mm-pct">close</span></div>
+            <div class="mm-row"><span class="mm-name">Random Forest (baseline)</span><div class="mm-track"><div class="mm-fill" style="width:78%;"></div></div><span class="mm-pct">mid</span></div>
+            <div class="mm-row"><span class="mm-name">DT + SMOTE + GridSearch</span><div class="mm-track"><div class="mm-fill" style="width:76%;"></div></div><span class="mm-pct">mid</span></div>
+            <div class="mm-row"><span class="mm-name">RF + SMOTE + GridSearch</span><div class="mm-track"><div class="mm-fill" style="width:70%;"></div></div><span class="mm-pct">low</span></div>
+        </div>
         <div class="stat"><p class="stat-num">5</p><p class="stat-label">Attack Categories</p></div>
         <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Compared</p></div>
         <div class="stat"><p class="stat-num">41</p><p class="stat-label">Traffic Features</p></div>
