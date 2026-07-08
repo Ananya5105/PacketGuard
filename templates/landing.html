@@ -99,22 +99,25 @@
             letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dim); margin: 0 0 18px;
         }
 
-        /* Backdrop shown behind whichever card is open */
-        .card-backdrop {
-            position: fixed; inset: 0; background: rgba(8,6,3,0.6);
-            z-index: 35; opacity: 0; pointer-events: none;
-            transition: opacity 0.2s;
-            backdrop-filter: blur(2px);
-        }
-        .card-backdrop.show { opacity: 1; pointer-events: auto; }
-
+        /* Features grid — the dimming layer lives INSIDE here now, same stacking context as the cards */
         .features { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; position: relative; }
-        .feature { padding: 24px; cursor: pointer; position: relative; }
-        .feature:nth-child(1) { transform: rotate(-0.7deg); }
-        .feature:nth-child(2) { transform: rotate(0.6deg); margin-top: 14px; }
-        .feature:nth-child(3) { transform: rotate(0.5deg); margin-top: -6px; }
-        .feature:nth-child(4) { transform: rotate(-0.8deg); margin-top: 10px; }
-        .feature.open { z-index: 45; }
+
+        .features-dim {
+            position: absolute; inset: -20px;
+            background: rgba(8,6,3,0.65);
+            border-radius: 8px;
+            z-index: 20;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .features-dim.show { opacity: 1; pointer-events: auto; }
+
+        .feature { padding: 24px; cursor: pointer; position: relative; z-index: 10; }
+        .feature:nth-child(2) { transform: rotate(-0.7deg); }
+        .feature:nth-child(3) { transform: rotate(0.6deg); margin-top: 14px; }
+        .feature:nth-child(4) { transform: rotate(0.5deg); margin-top: -6px; }
+        .feature:nth-child(5) { transform: rotate(-0.8deg); margin-top: 10px; }
+        .feature.open { z-index: 30; }
 
         .feature-title {
             font-family: 'Fraunces', serif; font-weight: 600; font-size: 15.5px; color: var(--ink); margin: 0;
@@ -127,7 +130,6 @@
         .feature.open .feature-title::after { transform: rotate(45deg); }
         .feature-desc { font-size: 12px; color: var(--ink-faint); line-height: 1.6; margin: 7px 0 0; }
 
-        /* Popover: exact same footprint as the card, opaque, so nothing bleeds through */
         .feature-popover {
             position: absolute;
             top: 0; left: 0;
@@ -157,6 +159,7 @@
             .feature:nth-child(n) { margin-top: 12px; transform: rotate(0deg); }
             .feature-popover { position: static; width: 100%; transform: none; opacity: 1; pointer-events: auto; display: none; box-shadow: none; margin-top: 12px; }
             .feature.open .feature-popover { display: block; }
+            .features-dim { display: none; }
         }
 
         .intro-overlay {
@@ -212,10 +215,10 @@
         .pop { opacity: 0; animation: popJump 0.75s cubic-bezier(.34,1.56,.64,1) forwards; }
         .stat.pop:nth-child(1) { --r: -1.1deg; animation-delay: 1.5s; }
         .stat.pop:nth-child(2) { --r: 0.9deg; animation-delay: 1.6s; }
-        .feature.pop:nth-child(1) { --r: -0.7deg; animation-delay: 1.7s; }
-        .feature.pop:nth-child(2) { --r: 0.6deg; animation-delay: 1.8s; }
-        .feature.pop:nth-child(3) { --r: 0.5deg; animation-delay: 1.9s; }
-        .feature.pop:nth-child(4) { --r: -0.8deg; animation-delay: 2.0s; }
+        .feature.pop:nth-child(2) { --r: -0.7deg; animation-delay: 1.7s; }
+        .feature.pop:nth-child(3) { --r: 0.6deg; animation-delay: 1.8s; }
+        .feature.pop:nth-child(4) { --r: 0.5deg; animation-delay: 1.9s; }
+        .feature.pop:nth-child(5) { --r: -0.8deg; animation-delay: 2.0s; }
     </style>
 </head>
 <body>
@@ -233,8 +236,6 @@
     <p class="intro-tag">reading every packet so you don't have to</p>
 </div>
 
-<div class="card-backdrop" id="cardBackdrop" onclick="closeAllFeatures()"></div>
-
 <div class="wrap">
     <nav>
         <a href="/" class="brand">PacketGuard</a>
@@ -249,8 +250,7 @@
     <div class="hero">
         <p class="eyebrow">Network Intrusion Detection</p>
         <h1>Packet<span>Guard</span></h1>
-        <p class="tagline">Feed it raw traffic. Get back what's normal, what's not, and why —
-        no black box, no guesswork.</p>
+        <p class="tagline">Upload traffic, get back what it is — and why the model thinks so.</p>
         <a href="/dashboard" class="cta">Launch Dashboard</a>
     </div>
 
@@ -269,6 +269,8 @@
 
     <p class="sec-label">What It Does</p>
     <div class="features">
+        <div class="features-dim" id="featuresDim" onclick="closeAllFeatures()"></div>
+
         <div class="feature case-card pop" onclick="toggleFeature(this, event)">
             <p class="feature-title">Multi-Model Comparison</p>
             <p class="feature-desc">Five models tried side by side on the same NSL-KDD split.</p>
@@ -321,12 +323,12 @@
         closeAllFeatures();
         if (!isOpen) {
             card.classList.add("open");
-            document.getElementById("cardBackdrop").classList.add("show");
+            document.getElementById("featuresDim").classList.add("show");
         }
     }
     function closeAllFeatures() {
         document.querySelectorAll(".feature.open").forEach(el => el.classList.remove("open"));
-        document.getElementById("cardBackdrop").classList.remove("show");
+        document.getElementById("featuresDim").classList.remove("show");
     }
 
     function countUp(el, target, decimals, suffix, delay) {
