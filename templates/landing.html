@@ -30,11 +30,7 @@
         nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 80px; }
         nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
         nav a.active { color: #39FFC8; }
-        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; display: flex; align-items: center; gap: 7px; }
-        .brand svg { flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(57,255,200,0.5)); }
-
-        .hero-logo { margin: 0 auto 20px; display: flex; justify-content: center; }
-        .hero-logo svg { filter: drop-shadow(0 0 10px rgba(57,255,200,0.45)); }
+        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
 
         .hero { text-align: center; margin-bottom: 60px; }
         .eyebrow {
@@ -62,10 +58,8 @@
         .cta:hover { box-shadow: 0 0 26px rgba(57,255,200,0.6); transform: translateY(-1px); }
 
         .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
             margin: 56px 0;
-        }
-        .mini-stats {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px;
         }
         .stat {
             background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
@@ -88,34 +82,15 @@
 <body>
 <div class="wrap">
     <nav>
-        <a href="/" class="brand">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#39FFC8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
-                <circle cx="12" cy="10" r="1.5" fill="#39FFC8" stroke="none"/>
-                <circle cx="9" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
-                <circle cx="15" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
-                <path d="M12 10L9 14.5M12 10L15 14.5" stroke-width="1"/>
-            </svg>
-            PacketGuard
-        </a>
+        <a href="/" class="brand">PacketGuard</a>
         <div>
             <a href="/dashboard">Dashboard</a>
-            <a href="/compare">Compare</a>
             <a href="/about">About</a>
             <a href="/docs">Docs</a>
         </div>
     </nav>
 
     <div class="hero">
-        <div class="hero-logo">
-            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#39FFC8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
-                <circle cx="12" cy="10" r="1.4" fill="#39FFC8" stroke="none"/>
-                <circle cx="9" cy="14.5" r="1" fill="#39FFC8" stroke="none"/>
-                <circle cx="15" cy="14.5" r="1" fill="#39FFC8" stroke="none"/>
-                <path d="M12 10L9 14.5M12 10L15 14.5" stroke-width="0.9"/>
-            </svg>
-        </div>
         <p class="eyebrow">Network Intrusion Detection</p>
         <h1>Packet<span>Guard</span></h1>
         <p class="tagline">A real-time traffic classification engine that flags DoS, Probe, R2L,
@@ -124,14 +99,10 @@
     </div>
 
     <div class="stats">
-        <div class="mini-stats">
-            <div class="stat"><p class="stat-num">5</p><p class="stat-label">Attack Categories</p></div>
-            <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Compared</p></div>
-            <div class="stat"><p class="stat-num">41</p><p class="stat-label">Traffic Features</p></div>
-        </div>
-        <p style="text-align:center; margin-top:16px;">
-            <a href="/compare" style="font-size:12px; color:#39FFC8; text-decoration:none;">See full model comparison →</a>
-        </p>
+        <div class="stat"><p class="stat-num">76.65%</p><p class="stat-label">Peak Accuracy</p></div>
+        <div class="stat"><p class="stat-num">6×</p><p class="stat-label">R2L Detection Gain</p></div>
+        <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Benchmarked</p></div>
+        <div class="stat"><p class="stat-num">3</p><p class="stat-label">Detection Modules</p></div>
     </div>
 
     <div class="features">
@@ -153,6 +124,7 @@
         </div>
     </div>
 
+    <footer>Built for a mini-project submission &middot; NSL-KDD dataset &middot; Flask + scikit-learn</footer>
 </div>
 </body>
 </html>
