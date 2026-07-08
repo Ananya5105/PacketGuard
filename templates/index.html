@@ -128,18 +128,6 @@
         }
         h1 span { color: var(--gold-bright); font-style: italic; }
 
-        .cursor {
-            display: inline-block;
-            width: 9px;
-            height: 26px;
-            background: var(--gold-bright);
-            margin-left: 4px;
-            vertical-align: middle;
-            animation: blink 1.1s steps(1) infinite;
-            box-shadow: 0 0 8px var(--gold);
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
         .subhead {
             text-align: center;
             font-size: 15px;
@@ -338,7 +326,7 @@
     <p class="intro-tag">booting the watchtower</p>
 </div>
 <div class="wrap">
-    <nav style="max-width:720px; margin:0 auto 24px; display:flex; justify-content:space-between; align-items:center; font-size:13px; position:relative; z-index:2;">
+    <nav style="max-width:720px; margin:0 auto 24px; display:flex; justify-content:space-between; align-items:center; font-size:16px; position:relative; z-index:2;">
     <a href="/" style="color:#F5D485; text-decoration:none; font-weight:600; font-family:'Fraunces',serif;">
         PacketGuard
     </a>
@@ -359,7 +347,7 @@
         </svg>
     </div>
     <p class="eyebrow">Network Intrusion Detection</p>
-    <h1>Packet<span>Guard</span><span class="cursor"></span></h1>
+    <h1>Packet<span>Guard</span></h1>
     <p class="subhead">upload traffic, get a classified breakdown</p>
 
     <div class="upload-card glass case-pin pop">
