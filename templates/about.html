@@ -46,14 +46,17 @@
 </head>
 <body>
 <div class="wrap">
-    <nav>
-        <a href="/" class="brand">PacketGuard</a>
-        <div>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/about" class="active">About</a>
-            <a href="/docs">Docs</a>
-        </div>
-    </nav>
+    <nav style="max-width:720px; margin:0 auto 24px; display:flex; justify-content:space-between; align-items:center; font-size:12px; position:relative; z-index:2;">
+    <a href="/" style="color:#39FFC8; text-decoration:none; font-weight:600;">
+        PacketGuard
+    </a>
+    <div style="display:flex; gap:20px;">
+        <a href="/dashboard" style="color:#D2F5EC; text-decoration:none;">Dashboard</a>
+        <a href="/compare" style="color:#6B8B82; text-decoration:none;">Compare</a>
+        <a href="/about" style="color:#6B8B82; text-decoration:none;">About</a>
+        <a href="/docs" style="color:#6B8B82; text-decoration:none;">Docs</a>
+    </div>
+</nav>
 
     <h1>About <span>PacketGuard</span></h1>
     <p class="subhead">Network intrusion detection</p>
