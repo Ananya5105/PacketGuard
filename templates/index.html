@@ -9,14 +9,14 @@
         * { box-sizing: border-box; }
         :root {
             --bg: #100D08;
-            --panel: rgba(28,22,14,0.88);
-            --panel-border: rgba(212,164,78,0.22);
+            --panel: rgba(28,22,14,0.94);
+            --panel-border: rgba(212,164,78,0.28);
             --gold: #D4A24E;
-            --gold-bright: #F0C868;
-            --gold-dim: #8A6B32;
-            --ink: #F5EAD3;
-            --ink-dim: #A6926E;
-            --ink-faint: #6B5D45;
+            --gold-bright: #F5D485;
+            --gold-dim: #A9843F;
+            --ink: #FDF6E8;
+            --ink-dim: #C4B08A;
+            --ink-faint: #8F7C58;
         }
         html, body {
             margin: 0;
@@ -69,7 +69,7 @@
             animation: logoPop 1.05s cubic-bezier(.34,1.56,.64,1) forwards;
         }
         .intro-tag {
-            font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px;
+            font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 1px;
             color: var(--gold-dim); margin-top: 16px; opacity: 0;
             animation: tagFade 1.4s ease forwards;
         }
@@ -106,7 +106,7 @@
 
         .eyebrow {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 500;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -142,7 +142,7 @@
 
         .subhead {
             text-align: center;
-            font-size: 12px;
+            font-size: 15px;
             color: var(--ink-faint);
             margin: 0 0 32px;
         }
@@ -181,7 +181,7 @@
             flex: 1;
             min-width: 180px;
             font-family: inherit;
-            font-size: 12px;
+            font-size: 14px;
             color: var(--ink-dim);
             padding: 11px 14px;
             border-radius: 3px;
@@ -240,10 +240,10 @@
             position: absolute; inset: 0;
             display: flex; align-items: center; justify-content: center;
             font-family: 'JetBrains Mono', monospace;
-            font-weight: 700; font-size: 16px; color: var(--ink);
+            font-weight: 700; font-size: 18px; color: var(--ink);
         }
-        .gauge-status { font-weight: 700; font-size: 16px; margin: 0 0 3px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .gauge-detail { font-size: 12px; color: var(--ink-faint); margin: 0; }
+        .gauge-status { font-weight: 700; font-size: 18px; margin: 0 0 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .gauge-detail { font-size: 14px; color: var(--ink-faint); margin: 0; }
 
         .charts-row {
             display: grid;
@@ -256,7 +256,7 @@
         .chart-card:nth-of-type(2) { transform: rotate(0.4deg); }
         .chart-title {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: 1.2px;
             text-transform: uppercase;
@@ -283,40 +283,40 @@
             display: flex; align-items: center; justify-content: center;
             margin-bottom: 12px;
         }
-        .cat-name { font-weight: 600; font-size: 13px; margin: 0 0 2px; color: var(--ink); text-transform: uppercase; letter-spacing: 0.5px; }
-        .cat-count { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 26px; margin: 0 0 10px; color: var(--ink); }
-        .conf-label { font-size: 10px; color: var(--ink-faint); display: flex; justify-content: space-between; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .cat-name { font-weight: 600; font-size: 15px; margin: 0 0 2px; color: var(--ink); text-transform: uppercase; letter-spacing: 0.5px; }
+        .cat-count { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; margin: 0 0 10px; color: var(--ink); }
+        .conf-label { font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
         .conf-track { height: 4px; border-radius: 999px; background: var(--bg); overflow: hidden; }
         .conf-fill { height: 100%; border-radius: 999px; }
         .severity {
             position: absolute; top: 16px; right: 16px;
-            font-size: 9px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
             padding: 3px 8px; border-radius: 3px;
         }
 
         .cat-expand { margin-top: 12px; }
         .cat-expand summary {
-            list-style: none; cursor: pointer; font-size: 10px; color: var(--gold-bright);
+            list-style: none; cursor: pointer; font-size: 12px; color: var(--gold-bright);
             text-transform: uppercase; letter-spacing: 0.5px;
         }
         .cat-expand summary::-webkit-details-marker { display: none; }
         .cat-expand summary::before { content: "+ details"; }
         .cat-expand[open] summary::before { content: "– details"; }
         .cat-expand-body {
-            font-size: 11px; color: var(--ink-dim); line-height: 1.6; margin-top: 8px;
+            font-size: 13px; color: var(--ink-dim); line-height: 1.65; margin-top: 8px;
             padding-top: 8px; border-top: 1px solid var(--panel-border);
         }
 
         .feat-row { margin-bottom: 12px; }
         .feat-label {
             display: flex; justify-content: space-between;
-            font-size: 12px; color: var(--ink-dim); margin-bottom: 4px;
+            font-size: 14px; color: var(--ink-dim); margin-bottom: 4px;
         }
 
         .placeholder {
             text-align: center;
             color: var(--ink-faint);
-            font-size: 13px;
+            font-size: 15px;
             padding: 44px 0;
             transform: rotate(0deg) !important;
         }
@@ -338,15 +338,15 @@
     <p class="intro-tag">booting the watchtower</p>
 </div>
 <div class="wrap">
-    <nav style="max-width:720px; margin:0 auto 24px; display:flex; justify-content:space-between; align-items:center; font-size:12px; position:relative; z-index:2;">
-    <a href="/" style="color:#F0C868; text-decoration:none; font-weight:600; font-family:'Fraunces',serif;">
+    <nav style="max-width:720px; margin:0 auto 24px; display:flex; justify-content:space-between; align-items:center; font-size:13px; position:relative; z-index:2;">
+    <a href="/" style="color:#F5D485; text-decoration:none; font-weight:600; font-family:'Fraunces',serif;">
         PacketGuard
     </a>
     <div style="display:flex; gap:20px;">
-        <a href="/dashboard" style="color:#F5EAD3; text-decoration:none;">Dashboard</a>
-        <a href="/compare" style="color:#A6926E; text-decoration:none;">Compare</a>
-        <a href="/about" style="color:#A6926E; text-decoration:none;">About</a>
-        <a href="/docs" style="color:#A6926E; text-decoration:none;">Docs</a>
+        <a href="/dashboard" style="color:#FDF6E8; text-decoration:none;">Dashboard</a>
+        <a href="/compare" style="color:#C4B08A; text-decoration:none;">Compare</a>
+        <a href="/about" style="color:#C4B08A; text-decoration:none;">About</a>
+        <a href="/docs" style="color:#C4B08A; text-decoration:none;">Docs</a>
     </div>
 </nav>
     <div class="hero-logo">
@@ -498,11 +498,11 @@
     anomalyOutput.innerHTML = `
         <div class="chart-card glass">
             <p class="chart-title">Unsupervised Anomaly Scan (Isolation Forest)</p>
-            <p style="font-size:13px; color:#C7B48F; margin: 0 0 14px;">
-                <strong style="color:#F0C868; font-size:20px; font-family:'JetBrains Mono',monospace;">${data.anomalies_flagged} / ${data.total}</strong>
+            <p style="font-size:15px; color:#DCC9A0; margin: 0 0 14px;">
+                <strong style="color:#F5D485; font-size:22px; font-family:'JetBrains Mono',monospace;">${data.anomalies_flagged} / ${data.total}</strong>
                 flows (${pct}%) flagged as statistically abnormal — independent of the category classifier above.
             </p>
-            <p style="font-size:11px; color:#8A7A56; line-height:1.6;">
+            <p style="font-size:13px; color:#A9905F; line-height:1.65;">
                 This model doesn't name an attack type — it only flags traffic that deviates from
                 normal patterns, so it can catch novel attacks the classifier was never trained on,
                 at the cost of not knowing exactly what kind of attack it is.
@@ -598,7 +598,7 @@
             type: "doughnut",
             data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }] },
             options: {
-                plugins: { legend: { position: "bottom", labels: { font: { size: 10, family: "'Manrope'" }, color: "#C7B48F", boxWidth: 8 } } }
+                plugins: { legend: { position: "bottom", labels: { font: { size: 12, family: "'Manrope'" }, color: "#DCC9A0", boxWidth: 8 } } }
             }
         });
 
@@ -608,8 +608,8 @@
             options: {
                 indexAxis: "y",
                 scales: {
-                    x: { max: 100, grid: { color: "#241C10" }, ticks: { color: "#8A7A56", font: { size: 9, family: "'Manrope'" } } },
-                    y: { grid: { display: false }, ticks: { color: "#C7B48F", font: { size: 10, family: "'Manrope'" } } }
+                    x: { max: 100, grid: { color: "#241C10" }, ticks: { color: "#A9905F", font: { size: 11, family: "'Manrope'" } } },
+                    y: { grid: { display: false }, ticks: { color: "#DCC9A0", font: { size: 12, family: "'Manrope'" } } }
                 },
                 plugins: { legend: { display: false } }
             }

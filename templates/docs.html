@@ -8,14 +8,14 @@
         * { box-sizing: border-box; }
         :root {
             --bg: #100D08;
-            --panel: rgba(28,22,14,0.88);
-            --panel-border: rgba(212,164,78,0.22);
+            --panel: rgba(28,22,14,0.94);
+            --panel-border: rgba(212,164,78,0.28);
             --gold: #D4A24E;
-            --gold-bright: #F0C868;
-            --gold-dim: #8A6B32;
-            --ink: #F5EAD3;
-            --ink-dim: #A6926E;
-            --ink-faint: #6B5D45;
+            --gold-bright: #F5D485;
+            --gold-dim: #A9843F;
+            --ink: #FDF6E8;
+            --ink-dim: #C4B08A;
+            --ink-faint: #8F7C58;
         }
         html, body {
             margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
@@ -23,7 +23,7 @@
         }
         body::before {
             content: ""; position: fixed; inset: 0;
-            background-image: radial-gradient(rgba(212,164,78,0.07) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(212,164,78,0.08) 1px, transparent 1px);
             background-size: 22px 22px;
             pointer-events: none; z-index: 1;
         }
@@ -34,7 +34,7 @@
         .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 600; margin-left: 0 !important; }
 
         h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 30px; color: var(--ink); margin: 0 0 8px; }
-        .subhead { font-size: 12px; color: var(--ink-faint); margin: 0 0 40px; }
+        .subhead { font-size: 13px; color: var(--ink-faint); margin: 0 0 40px; }
 
         .card {
             background: var(--panel); border: 1px solid var(--panel-border);
@@ -55,7 +55,6 @@
             color: var(--gold-dim); margin: 0 0 18px; display: flex; align-items: center;
         }
 
-        /* Step list — genuine sequence, so numbering earns its place */
         .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
         .step {
             counter-increment: step;
@@ -73,22 +72,21 @@
             box-shadow: 0 4px 10px rgba(212,164,78,0.3);
         }
         .step-body { padding-top: 3px; }
-        .step-title { font-size: 13.5px; font-weight: 700; color: var(--ink); margin: 0 0 4px; }
-        .step-desc { font-size: 12.5px; color: var(--ink-dim); line-height: 1.65; margin: 0; }
+        .step-title { font-size: 14px; font-weight: 700; color: var(--ink); margin: 0 0 4px; }
+        .step-desc { font-size: 13.5px; color: var(--ink-dim); line-height: 1.65; margin: 0; }
         .step-desc code {
-            font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--gold-bright);
-            background: rgba(212,164,78,0.1); padding: 1px 5px; border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gold-bright);
+            background: rgba(212,164,78,0.12); padding: 1px 5px; border-radius: 3px;
         }
 
         .cat-row {
-            display: flex; justify-content: space-between; font-size: 12px;
-            padding: 10px 0; border-bottom: 1px solid var(--panel-border);
+            display: flex; justify-content: space-between; font-size: 13px;
+            padding: 11px 0; border-bottom: 1px solid var(--panel-border);
         }
         .cat-row:last-child { border-bottom: none; }
         .cat-name { color: var(--ink); font-weight: 600; }
-        .cat-desc { color: var(--ink-faint); text-align: right; max-width: 60%; }
+        .cat-desc { color: var(--ink-faint); text-align: right; max-width: 60%; font-size: 13px; }
 
-        /* Human, not-in-a-line card placement */
         .card:nth-of-type(1) { transform: rotate(-0.4deg); }
         .card:nth-of-type(2) { transform: rotate(0.5deg); margin-top: 8px; }
 
