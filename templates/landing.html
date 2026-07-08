@@ -3,11 +3,11 @@
 <head>
     <title>PacketGuard — Network Intrusion Detection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         html, body {
-            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
             background: #060A10; color: #D2F5EC; position: relative;
         }
         body::before {
@@ -93,10 +93,74 @@
             padding-top: 12px; border-top: 1px solid rgba(57,255,200,0.08);
         }
 
-        footer { text-align: center; font-size: 11px; color: #4E6B63; margin-top: 50px; }
+        /* Intro splash */
+        .intro-overlay {
+            position: fixed; inset: 0; z-index: 999;
+            background: #060A10;
+            display: flex; align-items: center; justify-content: center;
+            animation: introHide 1.9s ease forwards;
+        }
+        .intro-logo-wrap { position: relative; width: 170px; height: 170px; }
+        .intro-ring {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 1px solid rgba(57,255,200,0.3);
+            animation: ringPulse 1.9s ease-out forwards;
+        }
+        .intro-logo {
+            width: 100%; height: 100%;
+            filter: drop-shadow(0 0 26px rgba(57,255,200,0.65));
+            animation: logoPop 1.9s cubic-bezier(.34,1.56,.64,1) forwards;
+        }
+        @keyframes logoPop {
+            0% { transform: scale(0.3); opacity: 0; }
+            45% { transform: scale(1.18); opacity: 1; }
+            65% { transform: scale(0.97); }
+            80% { transform: scale(1.03); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes ringPulse {
+            0% { transform: scale(0.6); opacity: 0; }
+            45% { transform: scale(1.4); opacity: 0.8; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+        @keyframes introHide {
+            0%, 62% { opacity: 1; pointer-events: all; }
+            100% { opacity: 0; pointer-events: none; visibility: hidden; }
+        }
+
+        /* Card pop-in */
+        @keyframes popJump {
+            0% { opacity: 0; transform: translateY(36px) scale(0.9); }
+            55% { opacity: 1; transform: translateY(-8px) scale(1.03); }
+            75% { transform: translateY(3px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .pop {
+            opacity: 0;
+            animation: popJump 0.7s cubic-bezier(.34,1.56,.64,1) forwards;
+        }
+        .stats.pop, .features .feature.pop { animation-fill-mode: forwards; }
+        .stat.pop:nth-child(1) { animation-delay: 1.85s; }
+        .stat.pop:nth-child(2) { animation-delay: 1.95s; }
+        .feature.pop:nth-child(1) { animation-delay: 2.05s; }
+        .feature.pop:nth-child(2) { animation-delay: 2.15s; }
+        .feature.pop:nth-child(3) { animation-delay: 2.25s; }
+        .feature.pop:nth-child(4) { animation-delay: 2.35s; }
     </style>
 </head>
 <body>
+<div class="intro-overlay">
+    <div class="intro-logo-wrap">
+        <div class="intro-ring"></div>
+        <svg class="intro-logo" viewBox="0 0 24 24" fill="none" stroke="#39FFC8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
+            <circle cx="12" cy="10" r="1.4" fill="#39FFC8" stroke="none"/>
+            <circle cx="9" cy="14.5" r="1" fill="#39FFC8" stroke="none"/>
+            <circle cx="15" cy="14.5" r="1" fill="#39FFC8" stroke="none"/>
+            <path d="M12 10L9 14.5M12 10L15 14.5" stroke-width="0.9"/>
+        </svg>
+    </div>
+</div>
 <div class="wrap">
     <nav>
         <a href="/" class="brand">PacketGuard</a>
@@ -119,13 +183,13 @@
     </div>
 
     <div class="stats">
-        <div class="stat"><p class="stat-num">≈80%</p><p class="stat-label">Accuracy, Best Model</p></div>
-        <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Benchmarked</p></div>
+        <div class="stat pop"><p class="stat-num">≈80%</p><p class="stat-label">Accuracy, Best Model</p></div>
+        <div class="stat pop"><p class="stat-num">22,544</p><p class="stat-label">Test Flows Evaluated</p></div>
     </div>
 
     <p class="sec-label">What It Does</p>
     <div class="features">
-        <details class="feature">
+        <details class="feature pop">
             <summary><p class="feature-title">Multi-Model Comparison</p></summary>
             <p class="feature-desc">Five models tried side by side on the same NSL-KDD split.</p>
             <p class="feature-detail">Random Forest, SMOTE-balanced variants, a Decision Tree,
@@ -133,14 +197,14 @@
             held-out test set — not just the winner, so you can see what tuning actually changed
             and what it didn't.</p>
         </details>
-        <details class="feature">
+        <details class="feature pop">
             <summary><p class="feature-title">Explainability</p></summary>
             <p class="feature-desc">Every prediction comes with a reason, not just a label.</p>
             <p class="feature-detail">Feature-importance scores show which traffic attributes
             the model actually weighed — usually volume and connection-count features — which
             is also how we found where the model was falling short.</p>
         </details>
-        <details class="feature">
+        <details class="feature pop">
             <summary><p class="feature-title">Anomaly Detection</p></summary>
             <p class="feature-desc">A second, independent pass on the same traffic.</p>
             <p class="feature-detail">An Isolation Forest runs alongside the classifier and
@@ -148,7 +212,7 @@
             you what kind of attack it is, but it can catch things the classifier never saw
             in training.</p>
         </details>
-        <details class="feature">
+        <details class="feature pop">
             <summary><p class="feature-title">Live Classification</p></summary>
             <p class="feature-desc">Upload a CSV, get a breakdown back in seconds.</p>
             <p class="feature-detail">Drop in a traffic file and see category counts,
@@ -157,7 +221,7 @@
         </details>
     </div>
 
-    <footer>B.Tech Computer Science mini project — Cybersecurity track</footer>
+
 </div>
 </body>
 </html>

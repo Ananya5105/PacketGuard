@@ -4,11 +4,11 @@
     <title>Model Comparison — PacketGuard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         html, body {
-            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
             background: #060A10; color: #D2F5EC; position: relative;
         }
         body::before {
@@ -87,6 +87,14 @@
         @media (max-width: 560px) {
             .charts-row { grid-template-columns: 1fr; }
         }
+
+        @keyframes popJump {
+            0% { opacity: 0; transform: translateY(36px) scale(0.9); }
+            55% { opacity: 1; transform: translateY(-8px) scale(1.03); }
+            75% { transform: translateY(3px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .pop { opacity: 0; animation: popJump 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
     </style>
 </head>
 <body>
@@ -104,27 +112,27 @@
     <h1>Model <span>Comparison</span></h1>
     <p class="subhead">Every model tried on NSL-KDD's KDDTest+, not just the one that shipped</p>
 
-    <div class="card">
+    <div class="card pop">
         <h2><span class="sec-num">01</span>Results</h2>
         <div class="comparison-row"><span>Random Forest (baseline)</span><span>74.41%</span></div>
         <div class="comparison-row"><span>RF + SMOTE + GridSearch</span><span>74.01%</span></div>
-        <div class="comparison-row"><span class="best">Decision Tree + SMOTE ★</span><span class="best">79.89%</span></div>
+        <div class="comparison-row"><span class="best">Decision Tree + SMOTE ★</span><span class="best">79.79%</span></div>
         <div class="comparison-row"><span>DT + SMOTE + GridSearch</span><span>74.43%</span></div>
         <div class="comparison-row"><span>RF + DT Voting Ensemble</span><span>76.27%</span></div>
     </div>
 
     <div class="charts-row">
-        <div class="chart-card glass card">
+        <div class="chart-card glass card pop" style="animation-delay:0.15s;">
             <p class="chart-title">Accuracy By Model</p>
             <div class="chart-box"><canvas id="accChart"></canvas></div>
         </div>
-        <div class="chart-card glass card">
+        <div class="chart-card glass card pop" style="animation-delay:0.25s;">
             <p class="chart-title">Accuracy, Precision, Recall &amp; F1</p>
             <div class="chart-box"><canvas id="metricsChart"></canvas></div>
         </div>
     </div>
 
-    <div class="card" style="padding: 14px 24px;">
+    <div class="card pop" style="padding: 14px 24px; animation-delay:0.35s;">
         <button class="btn-secondary" onclick="compareModels()">Refresh Live Benchmark Detail</button>
     </div>
 
@@ -151,8 +159,8 @@
             options: {
                 indexAxis: "y",
                 scales: {
-                    x: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'JetBrains Mono'" } } },
-                    y: { grid: { display: false }, ticks: { color: "#8FB5AC", font: { size: 9, family: "'JetBrains Mono'" } } }
+                    x: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'Manrope'" } } },
+                    y: { grid: { display: false }, ticks: { color: "#8FB5AC", font: { size: 9, family: "'Manrope'" } } }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -172,11 +180,11 @@
             },
             options: {
                 scales: {
-                    x: { grid: { display: false }, ticks: { color: "#6B8B82", font: { size: 8, family: "'JetBrains Mono'" } } },
-                    y: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'JetBrains Mono'" } } }
+                    x: { grid: { display: false }, ticks: { color: "#6B8B82", font: { size: 8, family: "'Manrope'" } } },
+                    y: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'Manrope'" } } }
                 },
                 plugins: {
-                    legend: { position: "bottom", labels: { color: "#8FB5AC", font: { size: 9, family: "'JetBrains Mono'" }, boxWidth: 8 } }
+                    legend: { position: "bottom", labels: { color: "#8FB5AC", font: { size: 9, family: "'Manrope'" }, boxWidth: 8 } }
                 }
             }
         });
@@ -209,7 +217,7 @@
         }).join("");
 
         compareOutput.innerHTML = `
-            <div class="card">
+            <div class="card pop">
                 <p class="chart-title">Model Comparison — NSL-KDD KDDTest+</p>
                 ${rows}
                 <p style="font-size:11px; color:#6B8B62; margin-top:16px; line-height:1.6;">

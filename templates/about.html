@@ -3,11 +3,11 @@
 <head>
     <title>About — PacketGuard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         html, body {
-            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
             background: #060A10; color: #D2F5EC; position: relative;
         }
         body::before {
@@ -50,6 +50,16 @@
             font-size: 12px; color: #8FB5AC; line-height: 1.7; margin-top: 10px;
             padding-top: 10px; border-top: 1px solid rgba(57,255,200,0.08);
         }
+
+        @keyframes popJump {
+            0% { opacity: 0; transform: translateY(36px) scale(0.9); }
+            55% { opacity: 1; transform: translateY(-8px) scale(1.03); }
+            75% { transform: translateY(3px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .pop { opacity: 0; animation: popJump 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
+        .card.pop:nth-of-type(1) { animation-delay: 0.05s; }
+        .card.pop:nth-of-type(2) { animation-delay: 0.15s; }
     </style>
 </head>
 <body>
@@ -67,7 +77,7 @@
     <h1>About <span>PacketGuard</span></h1>
     <p class="subhead">Network intrusion detection, trained and evaluated openly</p>
 
-    <div class="card">
+    <div class="card pop">
         <h2><span class="sec-num">01</span>What This Is</h2>
         <p>PacketGuard sorts network traffic into five categories — Normal, DoS, Probe, R2L,
         and U2R — using a classifier trained on NSL-KDD, the standard academic benchmark for
@@ -79,21 +89,38 @@
         page is the actual development history, not a highlight reel.</p>
     </div>
 
-    <div class="card">
+    <div class="card pop">
         <h2><span class="sec-num">02</span>Key Finding</h2>
-        <p>R2L and U2R recall stays low — in the 2–12% range — across every model tried, even
-        after SMOTE oversampling and hyperparameter tuning. Feature-importance analysis shows
-        the models lean on traffic-volume features (byte counts, connection counts) rather than
-        the login/content features — <strong>num_failed_logins</strong>, <strong>root_shell</strong>,
-        <strong>num_compromised</strong> — that R2L attacks actually depend on.</p>
+        <p>The short version: the model gets very good at spotting the attacks it's seen
+        plenty of, and stays weak on the rare ones — no matter how much we tuned it. A few
+        things stood out while digging into why:</p>
+        <ul>
+            <li>R2L and U2R recall never climbs past 12%, even after SMOTE oversampling and a
+            full GridSearch pass — so this isn't a "just tune it more" problem.</li>
+            <li>When we looked at what the model actually pays attention to, it's leaning
+            almost entirely on traffic-volume signals — byte counts, connection counts, how
+            busy a service is.</li>
+            <li>R2L attacks don't look like that. They show up in login and session details —
+            <strong>num_failed_logins</strong>, <strong>root_shell</strong>,
+            <strong>num_compromised</strong> — features the model barely uses.</li>
+            <li>So it's not that the model can't tell R2L apart — it's that it's looking in
+            the wrong place, because the training data gave it very few examples to learn the
+            right place from.</li>
+            <li>NSL-KDD's test split makes this worse on purpose: <strong>KDDTest+</strong>
+            includes attack variants that never show up in training, specifically to catch
+            models that memorize instead of generalize.</li>
+            <li>Which means the fix isn't a better classifier — it's better, more balanced
+            data on what R2L and U2R traffic actually looks like.</li>
+        </ul>
         <details class="exp">
             <summary>Why this matters</summary>
             <div class="exp-body">
-                This points to a data-level ceiling rather than a tuning problem: NSL-KDD's
-                <strong>KDDTest+</strong> split intentionally includes attack subtypes that never
-                appear in training, specifically to expose models that only memorize known
-                patterns instead of generalizing. No amount of hyperparameter search fixes a gap
-                in what the training data contains.
+                This is the difference between a tuning problem and a data problem, and it
+                changes what you'd try next. Throwing more grid search at this model won't
+                move the needle — what would help is either collecting more R2L/U2R examples,
+                engineering features closer to what those attacks actually change, or accepting
+                that a supervised classifier alone won't catch them and leaning harder on the
+                anomaly-detection path instead.
             </div>
         </details>
     </div>

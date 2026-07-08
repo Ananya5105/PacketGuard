@@ -3,11 +3,11 @@
 <head>
     <title>Docs — PacketGuard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         html, body {
-            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
             background: #060A10; color: #D2F5EC; position: relative;
         }
         body::before {
@@ -46,6 +46,16 @@
         .cat-row:last-child { border-bottom: none; }
         .cat-name { color: #D2F5EC; font-weight: 600; }
         .cat-desc { color: #6B8B82; text-align: right; max-width: 60%; }
+
+        @keyframes popJump {
+            0% { opacity: 0; transform: translateY(36px) scale(0.9); }
+            55% { opacity: 1; transform: translateY(-8px) scale(1.03); }
+            75% { transform: translateY(3px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .pop { opacity: 0; animation: popJump 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
+        .card.pop:nth-of-type(1) { animation-delay: 0.05s; }
+        .card.pop:nth-of-type(2) { animation-delay: 0.15s; }
     </style>
 </head>
 <body>
@@ -63,7 +73,7 @@
     <h1>Docs</h1>
     <p class="subhead">How to use PacketGuard</p>
 
-    <div class="card">
+    <div class="card pop">
         <h2><span class="sec-num">01</span>Getting Started</h2>
         <p>Go to the Dashboard, upload a CSV of network traffic in NSL-KDD format (41 feature
         columns, no header row), and click Analyze Traffic. Results come back as a risk gauge,
@@ -71,13 +81,13 @@
         a normal-sized file.</p>
     </div>
 
-    <div class="card">
+    <div class="card pop">
         <h2><span class="sec-num">02</span>Attack Categories</h2>
-        <div class="cat-row"><span class="cat-name">Normal</span><span class="cat-desc">Legitimate traffic, nothing flagged</span></div>
-        <div class="cat-row"><span class="cat-name">DoS</span><span class="cat-desc">Flooding a target to overwhelm it</span></div>
-        <div class="cat-row"><span class="cat-name">Probe</span><span class="cat-desc">Scanning/reconnaissance before an attack</span></div>
-        <div class="cat-row"><span class="cat-name">R2L</span><span class="cat-desc">Unauthorized access attempt from outside</span></div>
-        <div class="cat-row"><span class="cat-name">U2R</span><span class="cat-desc">Privilege escalation on an already-accessed system</span></div>
+        <div class="cat-row"><span class="cat-name">Normal</span><span class="cat-desc">Ordinary traffic — nothing here matches an attack pattern.</span></div>
+        <div class="cat-row"><span class="cat-name">DoS</span><span class="cat-desc">Floods a target with requests until it can't keep up.</span></div>
+        <div class="cat-row"><span class="cat-name">Probe</span><span class="cat-desc">Scans ports and hosts to map out weak points before striking.</span></div>
+        <div class="cat-row"><span class="cat-name">R2L</span><span class="cat-desc">Breaks in remotely using stolen or guessed credentials.</span></div>
+        <div class="cat-row"><span class="cat-name">U2R</span><span class="cat-desc">Escalates from a normal login to root once already inside.</span></div>
     </div>
 </div>
 </body>
