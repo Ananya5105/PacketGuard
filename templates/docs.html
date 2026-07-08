@@ -3,55 +3,100 @@
 <head>
     <title>Docs — PacketGuard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
+        :root {
+            --bg: #100D08;
+            --panel: rgba(28,22,14,0.88);
+            --panel-border: rgba(212,164,78,0.22);
+            --gold: #D4A24E;
+            --gold-bright: #F0C868;
+            --gold-dim: #8A6B32;
+            --ink: #F5EAD3;
+            --ink-dim: #A6926E;
+            --ink-faint: #6B5D45;
+        }
         html, body {
             margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
-            background: #060A10; color: #D2F5EC; position: relative;
+            background: var(--bg); color: var(--ink); position: relative;
         }
         body::before {
             content: ""; position: fixed; inset: 0;
-            background-image:
-                linear-gradient(rgba(57,255,200,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(57,255,200,0.05) 1px, transparent 1px);
-            background-size: 32px 32px;
+            background-image: radial-gradient(rgba(212,164,78,0.07) 1px, transparent 1px);
+            background-size: 22px 22px;
             pointer-events: none; z-index: 1;
         }
         .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
         nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 50px; }
-        nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
-        nav a.active { color: #39FFC8; }
-        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
+        nav a { color: var(--ink-dim); text-decoration: none; margin-left: 20px; }
+        nav a.active { color: var(--gold-bright); }
+        .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 600; margin-left: 0 !important; }
 
-        h1 { font-weight: 700; font-size: 30px; color: #EFFFFA; margin: 0 0 8px; }
-        h1 span { color: #39FFC8; }
-        .subhead { font-size: 12px; color: #6B8B82; margin: 0 0 40px; }
+        h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 30px; color: var(--ink); margin: 0 0 8px; }
+        .subhead { font-size: 12px; color: var(--ink-faint); margin: 0 0 40px; }
 
         .card {
-            background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
-            border-radius: 6px; padding: 26px; margin-bottom: 16px;
+            background: var(--panel); border: 1px solid var(--panel-border);
+            border-radius: 4px; padding: 26px; margin-bottom: 18px; position: relative;
+            box-shadow: 0 10px 24px -16px rgba(0,0,0,0.6);
+            transition: transform 0.2s ease;
         }
+        .card::before {
+            content: ""; position: absolute; top: -5px; left: 20px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold-dim));
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .card:hover { transform: rotate(0deg) translateY(-2px) !important; }
         .card h2 {
-            font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
-            color: #4DE8C8; margin: 0 0 14px; display: flex; align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--gold-dim); margin: 0 0 18px; display: flex; align-items: center;
         }
-        .sec-num { color: #39FFC8; opacity: 0.55; margin-right: 8px; font-weight: 500; }
-        .card p { font-size: 13px; color: #9AA5B1; line-height: 1.8; margin: 0 0 10px; }
+
+        /* Step list — genuine sequence, so numbering earns its place */
+        .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+        .step {
+            counter-increment: step;
+            display: flex; gap: 16px; align-items: flex-start;
+            padding: 14px 0; border-bottom: 1px solid var(--panel-border);
+        }
+        .step:last-child { border-bottom: none; padding-bottom: 0; }
+        .step:first-child { padding-top: 0; }
+        .step::before {
+            content: counter(step);
+            font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px;
+            color: #1A1206; background: var(--gold); flex-shrink: 0;
+            width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(212,164,78,0.3);
+        }
+        .step-body { padding-top: 3px; }
+        .step-title { font-size: 13.5px; font-weight: 700; color: var(--ink); margin: 0 0 4px; }
+        .step-desc { font-size: 12.5px; color: var(--ink-dim); line-height: 1.65; margin: 0; }
+        .step-desc code {
+            font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--gold-bright);
+            background: rgba(212,164,78,0.1); padding: 1px 5px; border-radius: 3px;
+        }
 
         .cat-row {
             display: flex; justify-content: space-between; font-size: 12px;
-            padding: 10px 0; border-bottom: 1px solid rgba(57,255,200,0.08);
+            padding: 10px 0; border-bottom: 1px solid var(--panel-border);
         }
         .cat-row:last-child { border-bottom: none; }
-        .cat-name { color: #D2F5EC; font-weight: 600; }
-        .cat-desc { color: #6B8B82; text-align: right; max-width: 60%; }
+        .cat-name { color: var(--ink); font-weight: 600; }
+        .cat-desc { color: var(--ink-faint); text-align: right; max-width: 60%; }
+
+        /* Human, not-in-a-line card placement */
+        .card:nth-of-type(1) { transform: rotate(-0.4deg); }
+        .card:nth-of-type(2) { transform: rotate(0.5deg); margin-top: 8px; }
 
         @keyframes popJump {
-            0% { opacity: 0; transform: translateY(36px) scale(0.9); }
-            55% { opacity: 1; transform: translateY(-8px) scale(1.03); }
-            75% { transform: translateY(3px) scale(0.99); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            0% { opacity: 0; transform: translateY(36px) scale(0.9) rotate(var(--r, 0deg)); }
+            55% { opacity: 1; transform: translateY(-8px) scale(1.03) rotate(var(--r, 0deg)); }
+            75% { transform: translateY(3px) scale(0.99) rotate(var(--r, 0deg)); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(var(--r, 0deg)); }
         }
         .pop { opacity: 0; animation: popJump 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
         .card.pop:nth-of-type(1) { animation-delay: 0.05s; }
@@ -73,16 +118,44 @@
     <h1>Docs</h1>
     <p class="subhead">How to use PacketGuard</p>
 
-    <div class="card pop">
-        <h2><span class="sec-num">01</span>Getting Started</h2>
-        <p>Go to the Dashboard, upload a CSV of network traffic in NSL-KDD format (41 feature
-        columns, no header row), and click Analyze Traffic. Results come back as a risk gauge,
-        a category breakdown, and per-category confidence — usually in a couple of seconds for
-        a normal-sized file.</p>
+    <div class="card pop" style="--r: -0.4deg;">
+        <h2>Getting Started</h2>
+        <ol class="steps">
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">Prepare your traffic file</p>
+                    <p class="step-desc">A CSV in NSL-KDD format — 41 feature columns, <code>no header row</code>.</p>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">Open the Dashboard</p>
+                    <p class="step-desc">Go to <code>/dashboard</code> and choose your file in the upload field.</p>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">Click Analyze Traffic</p>
+                    <p class="step-desc">Results come back in a couple of seconds for a normal-sized file.</p>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">Read the breakdown</p>
+                    <p class="step-desc">A risk gauge, a category breakdown, and per-category confidence.</p>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">Optional: go deeper</p>
+                    <p class="step-desc">Use <code>See What The Model Looks At</code> for feature importance, or <code>Run Anomaly Detector</code> for an independent unsupervised pass on the same file.</p>
+                </div>
+            </li>
+        </ol>
     </div>
 
-    <div class="card pop">
-        <h2><span class="sec-num">02</span>Attack Categories</h2>
+    <div class="card pop" style="--r: 0.5deg;">
+        <h2>Attack Categories</h2>
         <div class="cat-row"><span class="cat-name">Normal</span><span class="cat-desc">Ordinary traffic — nothing here matches an attack pattern.</span></div>
         <div class="cat-row"><span class="cat-name">DoS</span><span class="cat-desc">Floods a target with requests until it can't keep up.</span></div>
         <div class="cat-row"><span class="cat-name">Probe</span><span class="cat-desc">Scans ports and hosts to map out weak points before striking.</span></div>

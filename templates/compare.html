@@ -4,83 +4,103 @@
     <title>Model Comparison — PacketGuard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
+        :root {
+            --bg: #100D08;
+            --panel: rgba(28,22,14,0.88);
+            --panel-border: rgba(212,164,78,0.22);
+            --gold: #D4A24E;
+            --gold-bright: #F0C868;
+            --gold-dim: #8A6B32;
+            --ink: #F5EAD3;
+            --ink-dim: #A6926E;
+            --ink-faint: #6B5D45;
+        }
         html, body {
             margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
-            background: #060A10; color: #D2F5EC; position: relative;
+            background: var(--bg); color: var(--ink); position: relative;
         }
         body::before {
             content: ""; position: fixed; inset: 0;
-            background-image:
-                linear-gradient(rgba(57,255,200,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(57,255,200,0.05) 1px, transparent 1px);
-            background-size: 32px 32px;
+            background-image: radial-gradient(rgba(212,164,78,0.07) 1px, transparent 1px);
+            background-size: 22px 22px;
             pointer-events: none; z-index: 1;
         }
         .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
         nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 50px; }
-        nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
-        nav a.active { color: #39FFC8; }
-        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
+        nav a { color: var(--ink-dim); text-decoration: none; margin-left: 20px; }
+        nav a.active { color: var(--gold-bright); }
+        .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 600; margin-left: 0 !important; }
 
-        h1 { font-weight: 700; font-size: 30px; color: #EFFFFA; margin: 0 0 8px; }
-        h1 span { color: #39FFC8; }
-        .subhead { font-size: 12px; color: #6B8B82; margin: 0 0 40px; }
+        h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 30px; color: var(--ink); margin: 0 0 8px; }
+        h1 span { color: var(--gold-bright); font-style: italic; }
+        .subhead { font-size: 12px; color: var(--ink-faint); margin: 0 0 40px; }
 
         .card {
-            background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
-            border-radius: 6px; padding: 26px; margin-bottom: 16px;
+            background: var(--panel); border: 1px solid var(--panel-border);
+            border-radius: 4px; padding: 26px; margin-bottom: 18px; position: relative;
+            box-shadow: 0 10px 24px -16px rgba(0,0,0,0.6);
+            transition: transform 0.2s ease;
         }
+        .card::before {
+            content: ""; position: absolute; top: -5px; left: 20px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold-dim));
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .card:hover { transform: rotate(0deg) translateY(-2px) !important; }
         .card h2 {
-            font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
-            color: #4DE8C8; margin: 0 0 14px; display: flex; align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--gold-dim); margin: 0 0 14px; display: flex; align-items: center;
         }
-        .sec-num { color: #39FFC8; opacity: 0.55; margin-right: 8px; font-weight: 500; }
-        .card p { font-size: 13px; color: #9AA5B1; line-height: 1.7; margin: 0 0 10px; }
+        .card p { font-size: 13px; color: var(--ink-dim); line-height: 1.7; margin: 0 0 10px; }
         .card p:last-child { margin-bottom: 0; }
-        .card strong { color: #D2F5EC; }
+        .card strong { color: var(--ink); }
 
         .comparison-row {
             display: flex; justify-content: space-between; font-size: 12px;
-            padding: 10px 0; border-bottom: 1px solid rgba(57,255,200,0.08);
+            padding: 10px 0; border-bottom: 1px solid var(--panel-border);
+            font-family: 'JetBrains Mono', monospace;
         }
         .comparison-row:last-child { border-bottom: none; }
-        .comparison-row .best { color: #39FFC8; font-weight: 600; }
+        .comparison-row .best { color: var(--gold-bright); font-weight: 600; }
 
         button {
-            font-family: inherit; font-weight: 600; font-size: 13px; letter-spacing: 0.5px;
-            text-transform: uppercase; background: #39FFC8; color: #04120D; border: none;
-            padding: 12px 24px; border-radius: 4px; cursor: pointer;
-            box-shadow: 0 0 16px rgba(57,255,200,0.4); transition: box-shadow 0.15s, transform 0.1s;
+            font-family: inherit; font-weight: 600; font-size: 13px; letter-spacing: 0.3px;
+            background: var(--gold); color: #1A1206; border: none;
+            padding: 12px 24px; border-radius: 3px; cursor: pointer;
+            box-shadow: 0 6px 18px rgba(212,164,78,0.25); transition: box-shadow 0.15s, transform 0.1s, background 0.15s;
         }
-        button:hover { box-shadow: 0 0 24px rgba(57,255,200,0.65); transform: translateY(-1px); }
+        button:hover { box-shadow: 0 8px 22px rgba(212,164,78,0.4); transform: translateY(-1px); background: var(--gold-bright); }
         .btn-secondary {
-            width: 100%; background: transparent; color: #39FFC8;
-            border: 1px solid rgba(57,255,200,0.35); box-shadow: none;
+            width: 100%; background: transparent; color: var(--gold-bright);
+            border: 1px solid var(--panel-border); box-shadow: none;
         }
-        .btn-secondary:hover { background: rgba(57,255,200,0.06); box-shadow: 0 0 14px rgba(57,255,200,0.2); }
+        .btn-secondary:hover { background: rgba(212,164,78,0.08); box-shadow: 0 0 14px rgba(212,164,78,0.15); }
 
         .glass { position: relative; overflow: hidden; }
         .scanbar {
             position: absolute; top: 0; left: -40%; width: 40%; height: 2px;
-            background: linear-gradient(90deg, transparent, #39FFC8, transparent);
+            background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
             animation: scan 1.4s linear infinite;
         }
         @keyframes scan { from { left: -40%; } to { left: 100%; } }
-        .placeholder { text-align: center; color: #4E6B63; font-size: 13px; padding: 44px 0; }
+        .placeholder { text-align: center; color: var(--ink-faint); font-size: 13px; padding: 44px 0; transform: rotate(0deg) !important; }
 
         .feat-row { margin-bottom: 12px; }
-        .feat-label { display: flex; justify-content: space-between; font-size: 12px; color: #8FB5AC; margin-bottom: 4px; }
-        .conf-track { height: 4px; border-radius: 999px; background: #060A10; overflow: hidden; }
+        .feat-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-dim); margin-bottom: 4px; }
+        .conf-track { height: 4px; border-radius: 999px; background: var(--bg); overflow: hidden; }
         .conf-fill { height: 100%; border-radius: 999px; }
         .chart-title {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
-            color: #4DE8C8; margin: 0 0 14px; opacity: 0.8;
+            color: var(--gold-dim); margin: 0 0 14px;
         }
         .charts-row {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;
         }
         .chart-card { padding: 20px; }
         .chart-box { position: relative; height: 220px; }
@@ -88,11 +108,17 @@
             .charts-row { grid-template-columns: 1fr; }
         }
 
+        /* Human, not-in-a-line card placement */
+        .card:nth-of-type(1) { transform: rotate(-0.4deg); }
+        .charts-row .chart-card:nth-of-type(1) { transform: rotate(-0.6deg); }
+        .charts-row .chart-card:nth-of-type(2) { transform: rotate(0.5deg); margin-top: 8px; }
+        .card:nth-of-type(3) { transform: rotate(0.3deg); }
+
         @keyframes popJump {
-            0% { opacity: 0; transform: translateY(36px) scale(0.9); }
-            55% { opacity: 1; transform: translateY(-8px) scale(1.03); }
-            75% { transform: translateY(3px) scale(0.99); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            0% { opacity: 0; transform: translateY(36px) scale(0.9) rotate(var(--r, 0deg)); }
+            55% { opacity: 1; transform: translateY(-8px) scale(1.03) rotate(var(--r, 0deg)); }
+            75% { transform: translateY(3px) scale(0.99) rotate(var(--r, 0deg)); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(var(--r, 0deg)); }
         }
         .pop { opacity: 0; animation: popJump 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
     </style>
@@ -112,8 +138,8 @@
     <h1>Model <span>Comparison</span></h1>
     <p class="subhead">Every model tried on NSL-KDD's KDDTest+, not just the one that shipped</p>
 
-    <div class="card pop">
-        <h2><span class="sec-num">01</span>Results</h2>
+    <div class="card pop" style="--r: -0.4deg;">
+        <h2>Results</h2>
         <div class="comparison-row"><span>Random Forest (baseline)</span><span>74.41%</span></div>
         <div class="comparison-row"><span>RF + SMOTE + GridSearch</span><span>74.01%</span></div>
         <div class="comparison-row"><span class="best">Decision Tree + SMOTE ★</span><span class="best">79.79%</span></div>
@@ -122,17 +148,17 @@
     </div>
 
     <div class="charts-row">
-        <div class="chart-card glass card pop" style="animation-delay:0.15s;">
+        <div class="chart-card glass card pop" style="--r: -0.6deg; animation-delay:0.15s;">
             <p class="chart-title">Accuracy By Model</p>
             <div class="chart-box"><canvas id="accChart"></canvas></div>
         </div>
-        <div class="chart-card glass card pop" style="animation-delay:0.25s;">
+        <div class="chart-card glass card pop" style="--r: 0.5deg; animation-delay:0.25s;">
             <p class="chart-title">Accuracy, Precision, Recall &amp; F1</p>
             <div class="chart-box"><canvas id="metricsChart"></canvas></div>
         </div>
     </div>
 
-    <div class="card pop" style="padding: 14px 24px; animation-delay:0.35s;">
+    <div class="card pop" style="--r: 0.3deg; padding: 14px 24px; animation-delay:0.35s;">
         <button class="btn-secondary" onclick="compareModels()">Refresh Live Benchmark Detail</button>
     </div>
 
@@ -147,7 +173,7 @@
         const labels = data.map(m => m.method);
         const accuracies = data.map(m => Math.round(m.accuracy * 1000) / 10);
         const maxAcc = Math.max(...data.map(m => m.accuracy));
-        const colors = data.map(m => m.accuracy === maxAcc ? "#39FFC8" : "#2C4A44");
+        const colors = data.map(m => m.accuracy === maxAcc ? "#F0C868" : "#4A3D24");
 
         if (accChart) accChart.destroy();
         accChart = new Chart(document.getElementById("accChart").getContext("2d"), {
@@ -159,8 +185,8 @@
             options: {
                 indexAxis: "y",
                 scales: {
-                    x: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'Manrope'" } } },
-                    y: { grid: { display: false }, ticks: { color: "#8FB5AC", font: { size: 9, family: "'Manrope'" } } }
+                    x: { max: 100, grid: { color: "#241C10" }, ticks: { color: "#8A7A56", font: { size: 9, family: "'Manrope'" } } },
+                    y: { grid: { display: false }, ticks: { color: "#C7B48F", font: { size: 9, family: "'Manrope'" } } }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -172,19 +198,19 @@
             data: {
                 labels,
                 datasets: [
-                    { label: "Accuracy", data: data.map(m => Math.round(m.accuracy * 1000) / 10), backgroundColor: "#39FFC8" },
-                    { label: "Precision", data: data.map(m => Math.round(m.precision * 1000) / 10), backgroundColor: "#4DE8C8" },
-                    { label: "Recall", data: data.map(m => Math.round(m.recall * 1000) / 10), backgroundColor: "#2C4A44" },
-                    { label: "F1", data: data.map(m => Math.round(m.f1 * 1000) / 10), backgroundColor: "#6B8B82" }
+                    { label: "Accuracy", data: data.map(m => Math.round(m.accuracy * 1000) / 10), backgroundColor: "#F0C868" },
+                    { label: "Precision", data: data.map(m => Math.round(m.precision * 1000) / 10), backgroundColor: "#D4A24E" },
+                    { label: "Recall", data: data.map(m => Math.round(m.recall * 1000) / 10), backgroundColor: "#8A6B32" },
+                    { label: "F1", data: data.map(m => Math.round(m.f1 * 1000) / 10), backgroundColor: "#5C4A26" }
                 ]
             },
             options: {
                 scales: {
-                    x: { grid: { display: false }, ticks: { color: "#6B8B82", font: { size: 8, family: "'Manrope'" } } },
-                    y: { max: 100, grid: { color: "#1A2622" }, ticks: { color: "#6B8B82", font: { size: 9, family: "'Manrope'" } } }
+                    x: { grid: { display: false }, ticks: { color: "#8A7A56", font: { size: 8, family: "'Manrope'" } } },
+                    y: { max: 100, grid: { color: "#241C10" }, ticks: { color: "#8A7A56", font: { size: 9, family: "'Manrope'" } } }
                 },
                 plugins: {
-                    legend: { position: "bottom", labels: { color: "#8FB5AC", font: { size: 9, family: "'Manrope'" }, boxWidth: 8 } }
+                    legend: { position: "bottom", labels: { color: "#C7B48F", font: { size: 9, family: "'Manrope'" }, boxWidth: 8 } }
                 }
             }
         });
@@ -202,26 +228,26 @@
         const best = data.reduce((a, b) => (b.accuracy > a.accuracy ? b : a));
 
         const rows = data.map(m => {
-            const pct = Math.round(m.accuracy * 100);
+            const pct = Math.round(m.accuracy * 100 * 100) / 100;
             const isBest = m.method === best.method;
-            const color = isBest ? "#39FFC8" : "#4A6B62";
+            const color = isBest ? "#F0C868" : "#6B5D3A";
             return `
                 <div class="feat-row">
                     <div class="feat-label">
                         <span>${m.method}${isBest ? " ★ BEST" : ""}</span>
                         <span>${pct}% acc &nbsp;|&nbsp; R2L recall ${Math.round(m.r2l_recall * 100)}%</span>
                     </div>
-                    <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:${color}; ${isBest ? 'box-shadow:0 0 8px rgba(57,255,200,0.6);' : ''}"></div></div>
+                    <div class="conf-track"><div class="conf-fill" style="width:${pct}%; background:${color}; ${isBest ? 'box-shadow:0 0 8px rgba(240,200,104,0.6);' : ''}"></div></div>
                 </div>
             `;
         }).join("");
 
         compareOutput.innerHTML = `
-            <div class="card pop">
+            <div class="card pop" style="--r: -0.3deg;">
                 <p class="chart-title">Model Comparison — NSL-KDD KDDTest+</p>
                 ${rows}
-                <p style="font-size:11px; color:#6B8B62; margin-top:16px; line-height:1.6;">
-                    Best overall: <strong style="color:#39FFC8;">${best.method}</strong>, still the
+                <p style="font-size:11px; color:#8A7A56; margin-top:16px; line-height:1.6;">
+                    Best overall: <strong style="color:#F0C868;">${best.method}</strong>, still the
                     highest accuracy of anything tried and a clear step up on R2L recall from the
                     RF baseline (2% → ${Math.round(best.r2l_recall*100)}%). R2L/U2R recall stays
                     limited across every model here — a known NSL-KDD ceiling, since KDDTest+
