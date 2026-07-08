@@ -19,13 +19,10 @@
             content: "";
             position: fixed;
             inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0,255,200,0.025) 0px,
-                rgba(0,255,200,0.025) 1px,
-                transparent 1px,
-                transparent 3px
-            );
+            background-image:
+                linear-gradient(rgba(57,255,200,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57,255,200,0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
             pointer-events: none;
             z-index: 1;
         }
@@ -53,7 +50,7 @@
             color: #4DE8C8;
             text-align: center;
             margin: 0 0 8px;
-            opacity: 0.75;
+            opacity: 0.7;
         }
         .eyebrow::before { content: "// "; }
         .eyebrow::after { content: " //"; }
@@ -65,7 +62,7 @@
             margin: 0 0 8px;
             letter-spacing: 1px;
             color: #EFFFFA;
-            text-shadow: 0 0 18px rgba(57,255,200,0.35);
+            text-shadow: 0 0 18px rgba(57,255,200,0.3);
         }
         h1 span { color: #39FFC8; }
 
@@ -212,6 +209,19 @@
             padding: 3px 8px; border-radius: 3px;
         }
 
+        .cat-expand { margin-top: 12px; }
+        .cat-expand summary {
+            list-style: none; cursor: pointer; font-size: 10px; color: #39FFC8;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .cat-expand summary::-webkit-details-marker { display: none; }
+        .cat-expand summary::before { content: "+ details"; }
+        .cat-expand[open] summary::before { content: "– details"; }
+        .cat-expand-body {
+            font-size: 11px; color: #8FB5AC; line-height: 1.6; margin-top: 8px;
+            padding-top: 8px; border-top: 1px solid rgba(57,255,200,0.08);
+        }
+
         .feat-row { margin-bottom: 12px; }
         .feat-label {
             display: flex; justify-content: space-between;
@@ -251,7 +261,7 @@
     </div>
     <p class="eyebrow">Network Intrusion Detection</p>
     <h1>Packet<span>Guard</span><span class="cursor"></span></h1>
-    <p class="subhead">real-time traffic classification engine</p>
+    <p class="subhead">upload traffic, get a classified breakdown</p>
 
     <div class="upload-card glass">
         <input type="file" id="csvFile" accept=".csv,.txt">
@@ -279,11 +289,26 @@
     let barChart = null;
 
     const categoryMeta = {
-        "Normal": { color: "#4CB782", severity: "None",     icon: "M6 12l4 4 8-8" },
-        "DoS":    { color: "#FF5C4D", severity: "Medium",   icon: "M12 3v10M12 17v.01M4 12a8 8 0 1116 0" },
-        "Probe":  { color: "#E8B93F", severity: "Low",      icon: "M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 3" },
-        "R2L":    { color: "#39FFC8", severity: "High",     icon: "M7 11V7a5 5 0 0110 0v4M5 11h14v9H5z" },
-        "U2R":    { color: "#FF4D9E", severity: "Critical", icon: "M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z" }
+        "Normal": {
+            color: "#4CB782", severity: "None", icon: "M6 12l4 4 8-8",
+            detail: "No signs the model associates with an attack pattern — normal connection behavior for this traffic mix."
+        },
+        "DoS": {
+            color: "#FF5C4D", severity: "Medium", icon: "M12 3v10M12 17v.01M4 12a8 8 0 1116 0",
+            detail: "Flagged mainly on volume — high connection counts and error rates consistent with flooding traffic aimed at a single target."
+        },
+        "Probe": {
+            color: "#E8B93F", severity: "Low", icon: "M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 3",
+            detail: "Looks like reconnaissance — scanning patterns across ports or hosts that typically precede a targeted attack."
+        },
+        "R2L": {
+            color: "#39FFC8", severity: "High", icon: "M7 11V7a5 5 0 0110 0v4M5 11h14v9H5z",
+            detail: "Remote-to-local access attempt. This is the category the model is weakest on — see the Compare page for why."
+        },
+        "U2R": {
+            color: "#FF4D9E", severity: "Critical", icon: "M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z",
+            detail: "Privilege escalation on a system already accessed — rare in the data, so treat any flag here as worth a manual look."
+        }
     };
 
     async function uploadFile() {
@@ -380,10 +405,8 @@
             </p>
             <p style="font-size:11px; color:#6B8B62; line-height:1.6;">
                 This model doesn't name an attack type — it only flags traffic that deviates from
-                normal patterns, so it can catch novel attacks the classifier was never trained on.
-                In testing, this approach reached ~73% recall on real attacks vs. the classifier's
-                much lower recall on rare categories like R2L — at the cost of not knowing exactly
-                what kind of attack it is.
+                normal patterns, so it can catch novel attacks the classifier was never trained on,
+                at the cost of not knowing exactly what kind of attack it is.
             </p>
         </div>
     `;
@@ -411,7 +434,7 @@
         });
 
         const cardsHtml = Object.entries(counts).map(([cat, count]) => {
-            const meta = categoryMeta[cat] || { color: "#6B8B82", severity: "Unknown", icon: "M12 4v16" };
+            const meta = categoryMeta[cat] || { color: "#6B8B82", severity: "Unknown", icon: "M12 4v16", detail: "No further detail available for this category." };
             const avgConf = Math.round((confSums[cat] / count) * 100);
             return `
                 <div class="cat-card glass">
@@ -425,6 +448,10 @@
                     <p class="cat-count">${count}</p>
                     <div class="conf-label"><span>Confidence</span><span>${avgConf}%</span></div>
                     <div class="conf-track"><div class="conf-fill" style="width:${avgConf}%;background:${meta.color};box-shadow:0 0 8px ${meta.color}88;"></div></div>
+                    <details class="cat-expand">
+                        <summary></summary>
+                        <div class="cat-expand-body">${meta.detail}</div>
+                    </details>
                 </div>
             `;
         }).join("");

@@ -12,7 +12,10 @@
         }
         body::before {
             content: ""; position: fixed; inset: 0;
-            background: repeating-linear-gradient(0deg, rgba(0,255,200,0.025) 0px, rgba(0,255,200,0.025) 1px, transparent 1px, transparent 3px);
+            background-image:
+                linear-gradient(rgba(57,255,200,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57,255,200,0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
             pointer-events: none; z-index: 1;
         }
         .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
@@ -31,63 +34,68 @@
         }
         .card h2 {
             font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
-            color: #4DE8C8; margin: 0 0 14px;
+            color: #4DE8C8; margin: 0 0 14px; display: flex; align-items: center;
         }
-        .card ul { font-size: 13px; color: #9AA5B1; line-height: 1.9; margin: 0; padding-left: 18px; }
-        .card ul strong { color: #D2F5EC; }
+        .sec-num { color: #39FFC8; opacity: 0.55; margin-right: 8px; font-weight: 500; }
+        .card p, .card ul { font-size: 13px; color: #9AA5B1; line-height: 1.8; margin: 0 0 10px; padding-left: 0; }
+        .card ul { padding-left: 18px; }
+        .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+        .card strong { color: #D2F5EC; }
 
-        .comparison-row {
-            display: flex; justify-content: space-between; font-size: 12px;
-            padding: 10px 0; border-bottom: 1px solid rgba(57,255,200,0.08);
+        details.exp summary { list-style: none; cursor: pointer; color: #39FFC8; font-size: 12px; margin-top: 4px; }
+        details.exp summary::-webkit-details-marker { display: none; }
+        details.exp summary::before { content: "+ "; }
+        details.exp[open] summary::before { content: "– "; }
+        details.exp .exp-body {
+            font-size: 12px; color: #8FB5AC; line-height: 1.7; margin-top: 10px;
+            padding-top: 10px; border-top: 1px solid rgba(57,255,200,0.08);
         }
-        .comparison-row:last-child { border-bottom: none; }
-        .comparison-row .best { color: #39FFC8; font-weight: 600; }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <nav style="max-width:720px; margin:0 auto 24px; display:flex; justify-content:space-between; align-items:center; font-size:12px; position:relative; z-index:2;">
-    <a href="/" style="color:#39FFC8; text-decoration:none; font-weight:600;">
-        PacketGuard
-    </a>
-    <div style="display:flex; gap:20px;">
-        <a href="/dashboard" style="color:#D2F5EC; text-decoration:none;">Dashboard</a>
-        <a href="/compare" style="color:#6B8B82; text-decoration:none;">Compare</a>
-        <a href="/about" style="color:#6B8B82; text-decoration:none;">About</a>
-        <a href="/docs" style="color:#6B8B82; text-decoration:none;">Docs</a>
-    </div>
-</nav>
+    <nav>
+        <a href="/" class="brand">PacketGuard</a>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/compare">Compare</a>
+            <a href="/about" class="active">About</a>
+            <a href="/docs">Docs</a>
+        </div>
+    </nav>
 
     <h1>About <span>PacketGuard</span></h1>
-    <p class="subhead">Network intrusion detection</p>
+    <p class="subhead">Network intrusion detection, trained and evaluated openly</p>
 
     <div class="card">
-        <h2>What This Is</h2>
-        <ul>
-            <li>Classifies network traffic into <strong>Normal, DoS, Probe, R2L, U2R</strong></li>
-            <li>Trained on <strong>NSL-KDD</strong>, the standard academic IDS benchmark</li>
-            <li>Full interactive tool — not just a notebook accuracy score</li>
-            <li>Live classification, model comparison, explainability, and anomaly detection in one dashboard</li>
-        </ul>
+        <h2><span class="sec-num">01</span>What This Is</h2>
+        <p>PacketGuard sorts network traffic into five categories — Normal, DoS, Probe, R2L,
+        and U2R — using a classifier trained on NSL-KDD, the standard academic benchmark for
+        intrusion detection. Rather than reporting a single accuracy number from a notebook,
+        it's a working tool: upload traffic, get a classified breakdown, see what the model
+        looked at, and run a second, independent anomaly check on the same data.</p>
+        <p>The dashboard also shows every model that was tried along the way, not just the one
+        that shipped, so the comparison in the <a href="/compare" style="color:#39FFC8;">Compare</a>
+        page is the actual development history, not a highlight reel.</p>
     </div>
 
     <div class="card">
-        <h2>Model Comparison Results</h2>
-        <div class="comparison-row"><span>Random Forest (baseline)</span><span>74.41%</span></div>
-        <div class="comparison-row"><span>RF + SMOTE + GridSearch</span><span>74.01%</span></div>
-        <div class="comparison-row"><span class="best">Decision Tree + SMOTE ★</span><span class="best">80%</span></div>
-        <div class="comparison-row"><span>DT + SMOTE + GridSearch</span><span>74.43%</span></div>
-        <div class="comparison-row"><span>RF + DT Voting Ensemble</span><span>76.27%</span></div>
-    </div>
-
-    <div class="card">
-        <h2>Key Finding</h2>
-        <ul>
-            <li>R2L/U2R recall stays low (2–12%) across every model, even after SMOTE and tuning</li>
-            <li>Feature importance shows models lean on traffic-volume features, not login/content features R2L needs</li>
-            <li>Points to a data-level generalization ceiling, not a tuning problem</li>
-            <li>KDDTest+ intentionally includes attack subtypes absent from training data</li>
-        </ul>
+        <h2><span class="sec-num">02</span>Key Finding</h2>
+        <p>R2L and U2R recall stays low — in the 2–12% range — across every model tried, even
+        after SMOTE oversampling and hyperparameter tuning. Feature-importance analysis shows
+        the models lean on traffic-volume features (byte counts, connection counts) rather than
+        the login/content features — <strong>num_failed_logins</strong>, <strong>root_shell</strong>,
+        <strong>num_compromised</strong> — that R2L attacks actually depend on.</p>
+        <details class="exp">
+            <summary>Why this matters</summary>
+            <div class="exp-body">
+                This points to a data-level ceiling rather than a tuning problem: NSL-KDD's
+                <strong>KDDTest+</strong> split intentionally includes attack subtypes that never
+                appear in training, specifically to expose models that only memorize known
+                patterns instead of generalizing. No amount of hyperparameter search fixes a gap
+                in what the training data contains.
+            </div>
+        </details>
     </div>
 </div>
 </body>

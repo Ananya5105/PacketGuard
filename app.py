@@ -122,7 +122,7 @@ def compare_models():
     comparison = [
         {"method": "Random Forest (baseline)", "accuracy": 0.7441, "precision": 0.7996, "recall": 0.7441, "f1": 0.6987, "r2l_recall": 0.02},
         {"method": "RF + SMOTE + GridSearch", "accuracy": 0.7401, "precision": 0.8037, "recall": 0.7401, "f1": 0.6965, "r2l_recall": 0.03},
-        {"method": "Decision Tree + SMOTE", "accuracy": 0.7665, "precision": 0.77, "recall": 0.77, "f1": 0.74, "r2l_recall": 0.12},
+        {"method": "Decision Tree + SMOTE", "accuracy": 0.7989, "precision": 0.80, "recall": 0.80, "f1": 0.77, "r2l_recall": 0.12},
         {"method": "DT + SMOTE + GridSearch", "accuracy": 0.7443, "precision": 0.79, "recall": 0.7443, "f1": 0.71, "r2l_recall": 0.08},
         {"method": "RF + DT Voting Ensemble", "accuracy": 0.7627, "precision": 0.80, "recall": 0.7627, "f1": 0.71, "r2l_recall": 0.00},
     ]

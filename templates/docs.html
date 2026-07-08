@@ -12,15 +12,17 @@
         }
         body::before {
             content: ""; position: fixed; inset: 0;
-            background: repeating-linear-gradient(0deg, rgba(0,255,200,0.025) 0px, rgba(0,255,200,0.025) 1px, transparent 1px, transparent 3px);
+            background-image:
+                linear-gradient(rgba(57,255,200,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57,255,200,0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
             pointer-events: none; z-index: 1;
         }
         .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
         nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 50px; }
         nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
         nav a.active { color: #39FFC8; }
-        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; display: flex; align-items: center; gap: 7px; }
-        .brand svg { flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(57,255,200,0.5)); }
+        .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
 
         h1 { font-weight: 700; font-size: 30px; color: #EFFFFA; margin: 0 0 8px; }
         h1 span { color: #39FFC8; }
@@ -32,20 +34,10 @@
         }
         .card h2 {
             font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
-            color: #4DE8C8; margin: 0 0 14px;
+            color: #4DE8C8; margin: 0 0 14px; display: flex; align-items: center;
         }
-        .card p { font-size: 13px; color: #9AA5B1; line-height: 1.7; margin: 0 0 10px; }
-
-        .endpoint {
-            display: flex; gap: 10px; align-items: center; margin-bottom: 12px;
-            font-size: 12px;
-        }
-        .method {
-            background: rgba(57,255,200,0.12); color: #39FFC8; font-weight: 600;
-            padding: 3px 8px; border-radius: 3px; font-size: 10px;
-        }
-        .path { color: #D2F5EC; }
-        .desc { color: #6B8B82; font-size: 11px; margin-left: auto; }
+        .sec-num { color: #39FFC8; opacity: 0.55; margin-right: 8px; font-weight: 500; }
+        .card p { font-size: 13px; color: #9AA5B1; line-height: 1.8; margin: 0 0 10px; }
 
         .cat-row {
             display: flex; justify-content: space-between; font-size: 12px;
@@ -59,16 +51,7 @@
 <body>
 <div class="wrap">
     <nav>
-        <a href="/" class="brand">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#39FFC8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
-                <circle cx="12" cy="10" r="1.5" fill="#39FFC8" stroke="none"/>
-                <circle cx="9" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
-                <circle cx="15" cy="14.5" r="1.1" fill="#39FFC8" stroke="none"/>
-                <path d="M12 10L9 14.5M12 10L15 14.5" stroke-width="1"/>
-            </svg>
-            PacketGuard
-        </a>
+        <a href="/" class="brand">PacketGuard</a>
         <div>
             <a href="/dashboard">Dashboard</a>
             <a href="/compare">Compare</a>
@@ -81,22 +64,21 @@
     <p class="subhead">How to use PacketGuard</p>
 
     <div class="card">
-        <h2>Getting Started</h2>
+        <h2><span class="sec-num">01</span>Getting Started</h2>
         <p>Go to the Dashboard, upload a CSV of network traffic in NSL-KDD format (41 feature
-        columns, no header row), and click Analyze Traffic. Results appear as a risk gauge,
-        category breakdown, and per-category confidence.</p>
+        columns, no header row), and click Analyze Traffic. Results come back as a risk gauge,
+        a category breakdown, and per-category confidence — usually in a couple of seconds for
+        a normal-sized file.</p>
     </div>
 
     <div class="card">
-        <h2>Attack Categories</h2>
-        <div class="cat-row"><span class="cat-name">Normal</span><span class="cat-desc">Legitimate traffic, no attack detected</span></div>
-        <div class="cat-row"><span class="cat-name">DoS</span><span class="cat-desc">Denial of Service — flooding to overwhelm a target</span></div>
-        <div class="cat-row"><span class="cat-name">Probe</span><span class="cat-desc">Reconnaissance/scanning — mapping the network before an attack</span></div>
-        <div class="cat-row"><span class="cat-name">R2L</span><span class="cat-desc">Remote to Local — unauthorized access attempt from outside</span></div>
-        <div class="cat-row"><span class="cat-name">U2R</span><span class="cat-desc">User to Root — privilege escalation on an already-accessed system</span></div>
+        <h2><span class="sec-num">02</span>Attack Categories</h2>
+        <div class="cat-row"><span class="cat-name">Normal</span><span class="cat-desc">Legitimate traffic, nothing flagged</span></div>
+        <div class="cat-row"><span class="cat-name">DoS</span><span class="cat-desc">Flooding a target to overwhelm it</span></div>
+        <div class="cat-row"><span class="cat-name">Probe</span><span class="cat-desc">Scanning/reconnaissance before an attack</span></div>
+        <div class="cat-row"><span class="cat-name">R2L</span><span class="cat-desc">Unauthorized access attempt from outside</span></div>
+        <div class="cat-row"><span class="cat-name">U2R</span><span class="cat-desc">Privilege escalation on an already-accessed system</span></div>
     </div>
-
-    
 </div>
 </body>
 </html>

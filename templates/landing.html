@@ -7,45 +7,43 @@
     <style>
         * { box-sizing: border-box; }
         html, body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: 'JetBrains Mono', monospace;
-            background: #060A10;
-            color: #D2F5EC;
-            position: relative;
+            margin: 0; min-height: 100vh; font-family: 'JetBrains Mono', monospace;
+            background: #060A10; color: #D2F5EC; position: relative;
         }
         body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg, rgba(0,255,200,0.025) 0px, rgba(0,255,200,0.025) 1px,
-                transparent 1px, transparent 3px
-            );
-            pointer-events: none;
-            z-index: 1;
+            content: ""; position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(57,255,200,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57,255,200,0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none; z-index: 1;
+        }
+        body::after {
+            content: ""; position: fixed; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(57,255,200,0.07), transparent 55%);
+            pointer-events: none; z-index: 1;
         }
         .wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
 
-        nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 80px; }
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 70px; }
         nav a { color: #6B8B82; text-decoration: none; margin-left: 20px; }
         nav a.active { color: #39FFC8; }
         .brand { color: #39FFC8 !important; font-weight: 600; margin-left: 0 !important; }
 
-        .hero { text-align: center; margin-bottom: 60px; }
+        .hero { text-align: center; margin-bottom: 48px; }
         .eyebrow {
             font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-            color: #4DE8C8; opacity: 0.75; margin: 0 0 16px;
+            color: #4DE8C8; opacity: 0.7; margin: 0 0 16px;
         }
         .eyebrow::before { content: "// "; }
         .eyebrow::after { content: " //"; }
         h1 {
-            font-weight: 700; font-size: 46px; margin: 0 0 20px;
+            font-weight: 700; font-size: 44px; margin: 0 0 20px;
             letter-spacing: 0.5px; color: #EFFFFA;
-            text-shadow: 0 0 22px rgba(57,255,200,0.35);
+            text-shadow: 0 0 22px rgba(57,255,200,0.3);
         }
         h1 span { color: #39FFC8; }
-        .tagline { font-size: 15px; color: #8FB5AC; max-width: 480px; margin: 0 auto 36px; line-height: 1.6; }
+        .tagline { font-size: 14.5px; color: #8FB5AC; max-width: 500px; margin: 0 auto 36px; line-height: 1.7; }
 
         .cta {
             display: inline-block; font-weight: 600; font-size: 14px; letter-spacing: 0.5px;
@@ -58,25 +56,44 @@
         .cta:hover { box-shadow: 0 0 26px rgba(57,255,200,0.6); transform: translateY(-1px); }
 
         .stats {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-            margin: 56px 0;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+            margin: 52px 0;
         }
         .stat {
             background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
-            border-radius: 6px; padding: 20px 12px; text-align: center;
+            border-radius: 6px; padding: 20px 14px; text-align: center;
         }
         .stat-num { font-weight: 700; font-size: 24px; color: #39FFC8; margin: 0 0 4px; }
         .stat-label { font-size: 10px; color: #6B8B82; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+        .sec-label {
+            font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+            color: #4DE8C8; opacity: 0.7; margin: 0 0 14px;
+        }
+
+        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
         .feature {
             background: rgba(13,20,26,0.85); border: 1px solid rgba(57,255,200,0.15);
-            border-radius: 6px; padding: 24px;
+            border-radius: 6px; padding: 22px; cursor: pointer;
         }
-        .feature-title { font-weight: 600; font-size: 14px; color: #EFFFFA; margin: 0 0 8px; }
-        .feature-desc { font-size: 12px; color: #6B8B82; line-height: 1.6; margin: 0; }
+        .feature summary { list-style: none; }
+        .feature summary::-webkit-details-marker { display: none; }
+        .feature-title {
+            font-weight: 600; font-size: 14px; color: #EFFFFA; margin: 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .feature-title::after {
+            content: "+"; color: #39FFC8; font-weight: 700; font-size: 16px;
+            transition: transform 0.15s;
+        }
+        .feature[open] .feature-title::after { transform: rotate(45deg); }
+        .feature-desc { font-size: 12px; color: #6B8B82; line-height: 1.6; margin: 6px 0 0; }
+        .feature-detail {
+            font-size: 12px; color: #8FB5AC; line-height: 1.7; margin-top: 12px;
+            padding-top: 12px; border-top: 1px solid rgba(57,255,200,0.08);
+        }
 
-        footer { text-align: center; font-size: 11px; color: #4E6B63; margin-top: 60px; }
+        footer { text-align: center; font-size: 11px; color: #4E6B63; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -85,6 +102,7 @@
         <a href="/" class="brand">PacketGuard</a>
         <div>
             <a href="/dashboard">Dashboard</a>
+            <a href="/compare">Compare</a>
             <a href="/about">About</a>
             <a href="/docs">Docs</a>
         </div>
@@ -93,38 +111,53 @@
     <div class="hero">
         <p class="eyebrow">Network Intrusion Detection</p>
         <h1>Packet<span>Guard</span></h1>
-        <p class="tagline">A real-time traffic classification engine that flags DoS, Probe, R2L,
-        and U2R attacks from raw network flow data — with explainability and anomaly detection built in.</p>
+        <p class="tagline">Upload a batch of network traffic and it comes back sorted into
+        Normal, DoS, Probe, R2L, or U2R — along with which features drove each call, and a
+        separate unsupervised pass that flags anything unusual the classifier was never
+        trained to name.</p>
         <a href="/dashboard" class="cta">Launch Dashboard</a>
     </div>
 
     <div class="stats">
-        <div class="stat"><p class="stat-num">80%</p><p class="stat-label">Peak Accuracy</p></div>
-        <div class="stat"><p class="stat-num">6×</p><p class="stat-label">R2L Detection Gain</p></div>
+        <div class="stat"><p class="stat-num">≈80%</p><p class="stat-label">Accuracy, Best Model</p></div>
         <div class="stat"><p class="stat-num">5</p><p class="stat-label">Models Benchmarked</p></div>
-        <div class="stat"><p class="stat-num">3</p><p class="stat-label">Detection Modules</p></div>
     </div>
 
+    <p class="sec-label">What It Does</p>
     <div class="features">
-        <div class="feature">
-            <p class="feature-title">Multi-Model Comparison</p>
-            <p class="feature-desc">Random Forest, Decision Tree, and Voting Ensemble benchmarked side by side on NSL-KDD's KDDTest+.</p>
-        </div>
-        <div class="feature">
-            <p class="feature-title">Explainability</p>
-            <p class="feature-desc">See exactly which traffic features the model relies on most when classifying an attack.</p>
-        </div>
-        <div class="feature">
-            <p class="feature-title">Anomaly Detection</p>
-            <p class="feature-desc">An unsupervised Isolation Forest catches statistically abnormal traffic the classifier was never trained on.</p>
-        </div>
-        <div class="feature">
-            <p class="feature-title">Live Classification</p>
-            <p class="feature-desc">Upload traffic data and get instant category breakdowns, confidence scores, and severity ratings.</p>
-        </div>
+        <details class="feature">
+            <summary><p class="feature-title">Multi-Model Comparison</p></summary>
+            <p class="feature-desc">Five models tried side by side on the same NSL-KDD split.</p>
+            <p class="feature-detail">Random Forest, SMOTE-balanced variants, a Decision Tree,
+            and a voting ensemble were all trained on the same data and evaluated on the same
+            held-out test set — not just the winner, so you can see what tuning actually changed
+            and what it didn't.</p>
+        </details>
+        <details class="feature">
+            <summary><p class="feature-title">Explainability</p></summary>
+            <p class="feature-desc">Every prediction comes with a reason, not just a label.</p>
+            <p class="feature-detail">Feature-importance scores show which traffic attributes
+            the model actually weighed — usually volume and connection-count features — which
+            is also how we found where the model was falling short.</p>
+        </details>
+        <details class="feature">
+            <summary><p class="feature-title">Anomaly Detection</p></summary>
+            <p class="feature-desc">A second, independent pass on the same traffic.</p>
+            <p class="feature-detail">An Isolation Forest runs alongside the classifier and
+            flags statistically unusual flows without needing a label for them — it won't tell
+            you what kind of attack it is, but it can catch things the classifier never saw
+            in training.</p>
+        </details>
+        <details class="feature">
+            <summary><p class="feature-title">Live Classification</p></summary>
+            <p class="feature-desc">Upload a CSV, get a breakdown back in seconds.</p>
+            <p class="feature-detail">Drop in a traffic file and see category counts,
+            per-category confidence, and an overall risk read — no notebook, no separate
+            script to run.</p>
+        </details>
     </div>
 
-    
+    <footer>B.Tech Computer Science mini project — Cybersecurity track</footer>
 </div>
 </body>
 </html>
