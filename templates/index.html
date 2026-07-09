@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/fx.css">
     <style>
         * { box-sizing: border-box; }
         :root {
@@ -43,7 +44,7 @@
         }
         .wrap { width: 100%; max-width: 880px; position: relative; z-index: 2; }
 
-        nav { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 28px; }
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 28px; flex-wrap: wrap; gap: 10px; }
         nav a { color: var(--ink-dim); text-decoration: none; margin-left: 26px; font-weight: 500; }
         nav a.active { color: var(--gold-bright); }
         .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; margin-left: 0 !important; }
@@ -205,7 +206,7 @@
             border: 1px solid var(--panel-border);
             box-shadow: none;
         }
-        .btn-secondary:hover { background: rgba(212,164,78,0.08); box-shadow: 0 0 14px rgba(212,164,78,0.15); background: rgba(212,164,78,0.08); }
+        .btn-secondary:hover { background: rgba(212,164,78,0.08); box-shadow: 0 0 14px rgba(212,164,78,0.15); }
 
         .scanbar {
             position: absolute;
@@ -320,6 +321,8 @@
     </style>
 </head>
 <body>
+<canvas id="pg-bg" class="pg-bg-canvas"></canvas>
+
 <div class="intro-overlay">
     <div class="intro-logo-wrap">
         <div class="intro-ring"></div>
@@ -339,9 +342,9 @@
         <div>
             <a href="/dashboard" class="active">Dashboard</a>
             <a href="/compare">Compare</a>
+            <a href="/dataset">Dataset</a>
             <a href="/about">About</a>
             <a href="/docs">Docs</a>
-            <a href="/dataset">Dataset</a>
         </div>
     </nav>
     <div class="hero-logo">
@@ -378,6 +381,7 @@
     <div id="anomalyOutput"></div>
 </div>
 
+<script src="/static/fx.js"></script>
 <script>
     let doughnutChart = null;
     let barChart = null;
