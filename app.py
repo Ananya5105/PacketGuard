@@ -60,6 +60,10 @@ def about():
 def docs():
     return render_template("docs.html")
 
+@app.route("/dataset")
+def dataset():
+    return render_template("dataset.html")
+
 
 @app.route("/predict", methods=["POST"])
 def predict():

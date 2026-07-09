@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dataset — PacketGuard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/fx.css">
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --bg: #100D08;
+            --panel: rgba(28,22,14,0.94);
+            --panel-border: rgba(212,164,78,0.28);
+            --gold: #D4A24E;
+            --gold-bright: #F5D485;
+            --gold-dim: #A9843F;
+            --ink: #FDF6E8;
+            --ink-dim: #C4B08A;
+            --ink-faint: #8F7C58;
+        }
+        html, body {
+            margin: 0; min-height: 100vh; font-family: 'Manrope', sans-serif;
+            background: var(--bg); color: var(--ink); position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background-image: radial-gradient(rgba(212,164,78,0.08) 1px, transparent 1px);
+            background-size: 22px 22px;
+            pointer-events: none; z-index: 1;
+        }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 44px 24px 90px; position: relative; z-index: 2; }
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 56px; flex-wrap: wrap; gap: 10px; }
+        nav a { color: var(--ink-dim); text-decoration: none; margin-left: 26px; font-weight: 500; }
+        nav a.active { color: var(--gold-bright); }
+        .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; margin-left: 0 !important; }
+
+        h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 42px; color: var(--ink); margin: 0 0 10px; letter-spacing: -0.5px; }
+        .subhead { font-size: 15.5px; color: var(--ink-faint); margin: 0 0 46px; }
+
+        .card {
+            background: var(--panel); border: 1px solid var(--panel-border);
+            border-radius: 5px; padding: 34px; margin-bottom: 20px; position: relative;
+            box-shadow: 0 10px 24px -16px rgba(0,0,0,0.6);
+            transition: transform 0.2s ease;
+        }
+        .card::before {
+            content: ""; position: absolute; top: -5px; left: 20px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold-dim));
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .card:hover { transform: rotate(0deg) translateY(-2px) !important; }
+        .card h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--gold-dim); margin: 0 0 18px; display: flex; align-items: center;
+        }
+        .card p { font-size: 15.5px; color: var(--ink-dim); line-height: 1.75; margin: 0 0 12px; }
+        .card p:last-child { margin-bottom: 0; }
+        .card strong { color: var(--ink); }
+        .card code {
+            font-family: 'JetBrains Mono', monospace; font-size: 13.5px; color: var(--gold-bright);
+            background: rgba(212,164,78,0.12); padding: 2px 7px; border-radius: 3px;
+        }
+        .card a { color: var(--gold-bright); }
+
+        .col-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px; margin-top: 6px;
+        }
+        .col-chip {
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim);
+            background: rgba(212,164,78,0.08); border: 1px solid var(--panel-border);
+            padding: 6px 10px; border-radius: 4px;
+        }
+
+        .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+        .step {
+            counter-increment: step;
+            display: flex; gap: 18px; align-items: flex-start;
+            padding: 17px 0; border-bottom: 1px solid var(--panel-border);
+        }
+        .step:last-child { border-bottom: none; padding-bottom: 0; }
+        .step:first-child { padding-top: 0; }
+        .step::before {
+            content: counter(step);
+            font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px;
+            color: #1A1206; background: var(--gold); flex-shrink: 0;
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(212,164,78,0.35);
+        }
+        .step-body { padding-top: 4px; }
+        .step-title { font-size: 16px; font-weight: 700; color: var(--ink); margin: 0 0 5px; }
+        .step-desc { font-size: 14.5px; color: var(--ink-dim); line-height: 1.65; margin: 0; }
+
+        .warn {
+            background: rgba(212,120,78,0.1); border: 1px solid rgba(212,120,78,0.3);
+            border-radius: 5px; padding: 16px 20px; font-size: 14px; color: #E3B896;
+            margin-top: 8px;
+        }
+
+        .card:nth-of-type(1) { transform: rotate(-0.4deg); }
+        .card:nth-of-type(2) { transform: rotate(0.5deg); margin-top: 8px; }
+        .card:nth-of-type(3) { transform: rotate(-0.3deg); }
+
+        @keyframes popJump {
+            0% { opacity: 0; transform: translateY(36px) scale(0.9) rotate(var(--r, 0deg)); }
+            55% { opacity: 1; transform: translateY(-8px) scale(1.03) rotate(var(--r, 0deg)); }
+            75% { transform: translateY(3px) scale(0.99) rotate(var(--r, 0deg)); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(var(--r, 0deg)); }
+        }
+        .pop { opacity: 0; animation: popJump 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
+        .card.pop:nth-of-type(1) { animation-delay: 0.05s; }
+        .card.pop:nth-of-type(2) { animation-delay: 0.15s; }
+        .card.pop:nth-of-type(3) { animation-delay: 0.25s; }
+    </style>
+</head>
+<body>
+<canvas id="pg-bg" class="pg-bg-canvas"></canvas>
+
+<div class="wrap">
+    <nav>
+        <a href="/" class="brand">PacketGuard</a>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/compare">Compare</a>
+            <a href="/about">About</a>
+            <a href="/docs">Docs</a>
+            <a href="/dataset" class="active">Dataset</a>
+
+        </div>
+    </nav>
+
+    <h1>Dataset</h1>
+    <p class="subhead">What PacketGuard expects, and where to get it</p>
+
+    <div class="card pop" style="--r: -0.4deg;">
+        <h2>NSL-KDD, in short</h2>
+        <p>PacketGuard is trained on <strong>NSL-KDD</strong>, the standard academic benchmark
+        for network intrusion detection — an improved, deduplicated version of the older KDD Cup
+        1999 dataset. It ships as two files: <code>KDDTrain+.txt</code> for training and
+        <code>KDDTest+.txt</code> for evaluation, each row describing one network connection
+        with 41 numeric/categorical features plus a label.</p>
+        <p>Get it from the official source or a mirror, for example
+        <a href="https://github.com/defcom17/NSL_KDD" target="_blank">github.com/defcom17/NSL_KDD</a>.</p>
+    </div>
+
+    <div class="card pop" style="--r: 0.4deg;">
+        <h2>What a valid upload looks like</h2>
+        <ol class="steps">
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">CSV format, no header row</p>
+                    <p class="step-desc">The first line of your file should be data, not column names.</p>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">Exactly 41 feature columns</p>
+                    <p class="step-desc">In the standard NSL-KDD order — see the full list below. Extra columns like <code>label</code> or <code>difficulty</code> should be stripped before upload.</p>
+                </div>
+            </li>
+            <li class="step">
+                <div class="step-body">
+                    <p class="step-title">Same units and encodings as NSL-KDD</p>
+                    <p class="step-desc">Categorical fields (<code>protocol_type</code>, <code>service</code>, <code>flag</code>) as text strings, not pre-encoded numbers — the app handles encoding internally.</p>
+                </div>
+            </li>
+        </ol>
+        <div class="warn">
+            Uploading data that doesn't match this schema will either get rejected outright or,
+            worse, silently produce meaningless predictions — the model has no way to know the
+            columns are misaligned.
+        </div>
+    </div>
+
+    <div class="card pop" style="--r: -0.3deg;">
+        <h2>The 41 columns, in order</h2>
+        <div class="col-grid">
+            <span class="col-chip">duration</span>
+            <span class="col-chip">protocol_type</span>
+            <span class="col-chip">service</span>
+            <span class="col-chip">flag</span>
+            <span class="col-chip">src_bytes</span>
+            <span class="col-chip">dst_bytes</span>
+            <span class="col-chip">land</span>
+            <span class="col-chip">wrong_fragment</span>
+            <span class="col-chip">urgent</span>
+            <span class="col-chip">hot</span>
+            <span class="col-chip">num_failed_logins</span>
+            <span class="col-chip">logged_in</span>
+            <span class="col-chip">num_compromised</span>
+            <span class="col-chip">root_shell</span>
+            <span class="col-chip">su_attempted</span>
+            <span class="col-chip">num_root</span>
+            <span class="col-chip">num_file_creations</span>
+            <span class="col-chip">num_shells</span>
+            <span class="col-chip">num_access_files</span>
+            <span class="col-chip">num_outbound_cmds</span>
+            <span class="col-chip">is_host_login</span>
+            <span class="col-chip">is_guest_login</span>
+            <span class="col-chip">count</span>
+            <span class="col-chip">srv_count</span>
+            <span class="col-chip">serror_rate</span>
+            <span class="col-chip">srv_serror_rate</span>
+            <span class="col-chip">rerror_rate</span>
+            <span class="col-chip">srv_rerror_rate</span>
+            <span class="col-chip">same_srv_rate</span>
+            <span class="col-chip">diff_srv_rate</span>
+            <span class="col-chip">srv_diff_host_rate</span>
+            <span class="col-chip">dst_host_count</span>
+            <span class="col-chip">dst_host_srv_count</span>
+            <span class="col-chip">dst_host_same_srv_rate</span>
+            <span class="col-chip">dst_host_diff_srv_rate</span>
+            <span class="col-chip">dst_host_same_src_port_rate</span>
+            <span class="col-chip">dst_host_srv_diff_host_rate</span>
+            <span class="col-chip">dst_host_serror_rate</span>
+            <span class="col-chip">dst_host_srv_serror_rate</span>
+            <span class="col-chip">dst_host_rerror_rate</span>
+            <span class="col-chip">dst_host_srv_rerror_rate</span>
+        </div>
+    </div>
+</div>
+
+<script src="/static/fx.js"></script>
+</body>
+</html>
