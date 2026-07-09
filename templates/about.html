@@ -4,6 +4,7 @@
     <title>About — PacketGuard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/fx.css">
     <style>
         * { box-sizing: border-box; }
         :root {
@@ -69,7 +70,6 @@
             padding-top: 12px; border-top: 1px solid var(--panel-border);
         }
 
-        /* Human, not-in-a-line card placement */
         .card:nth-of-type(1) { transform: rotate(-0.5deg); }
         .card:nth-of-type(2) { transform: rotate(0.4deg); margin-top: 6px; }
 
@@ -85,6 +85,8 @@
     </style>
 </head>
 <body>
+<canvas id="pg-bg" class="pg-bg-canvas"></canvas>
+
 <div class="wrap">
     <nav>
         <a href="/" class="brand">PacketGuard</a>
@@ -147,5 +149,7 @@
         </details>
     </div>
 </div>
+
+<script src="/static/fx.js"></script>
 </body>
 </html>

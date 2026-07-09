@@ -1,0 +1,38 @@
+.pg-cursor-dot, .pg-cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 50%;
+    will-change: transform;
+}
+.pg-cursor-dot {
+    width: 6px; height: 6px;
+    background: #F5D485;
+    box-shadow: 0 0 8px rgba(245,212,133,0.85);
+}
+.pg-cursor-ring {
+    width: 34px; height: 34px;
+    border: 1px solid rgba(245,212,133,0.5);
+    transition: width .18s ease, height .18s ease, border-color .18s ease, background .18s ease;
+}
+.pg-cursor-ring.pg-hover {
+    width: 54px; height: 54px;
+    border-color: #F5D485;
+    background: rgba(245,212,133,0.07);
+}
+.pg-cursor-ring.pg-active {
+    width: 24px; height: 24px;
+    background: rgba(245,212,133,0.16);
+}
+@media (pointer: coarse) {
+    .pg-cursor-dot, .pg-cursor-ring { display: none; }
+}
+body.pg-cursor-on, body.pg-cursor-on * { cursor: none !important; }
+
+.pg-bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}

@@ -4,6 +4,7 @@
     <title>Docs — PacketGuard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/fx.css">
     <style>
         * { box-sizing: border-box; }
         :root {
@@ -102,6 +103,8 @@
     </style>
 </head>
 <body>
+<canvas id="pg-bg" class="pg-bg-canvas"></canvas>
+
 <div class="wrap">
     <nav>
         <a href="/" class="brand">PacketGuard</a>
@@ -122,7 +125,7 @@
             <li class="step">
                 <div class="step-body">
                     <p class="step-title">Prepare your traffic file</p>
-                    <p class="step-desc">A CSV in NSL-KDD format — 41 feature columns, <code>no header row</code>.</p>
+                    <p class="step-desc">A CSV in NSL-KDD format — 41 feature columns, <code>no header row</code>. Column order must match the standard NSL-KDD schema (duration, protocol_type, service, flag, src_bytes, dst_bytes ... through dst_host_srv_rerror_rate). If you're testing, use rows straight from <code>KDDTest+.txt</code>.</p>
                 </div>
             </li>
             <li class="step">
@@ -161,5 +164,7 @@
         <div class="cat-row"><span class="cat-name">U2R</span><span class="cat-desc">Escalates from a normal login to root once already inside.</span></div>
     </div>
 </div>
+
+<script src="/static/fx.js"></script>
 </body>
 </html>
