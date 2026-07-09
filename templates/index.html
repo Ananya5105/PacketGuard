@@ -42,6 +42,11 @@
         }
         .wrap { width: 100%; max-width: 720px; position: relative; z-index: 2; }
 
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 24px; }
+        nav a { color: var(--ink-dim); text-decoration: none; margin-left: 20px; }
+        nav a.active { color: var(--gold-bright); }
+        .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 600; margin-left: 0 !important; }
+
         .hero-logo {
             margin: 0 auto 18px;
             display: flex;
@@ -326,17 +331,15 @@
     <p class="intro-tag">booting the watchtower</p>
 </div>
 <div class="wrap">
-    <nav style="max-width:720px; margin:0 auto 24px; display:flex; justify-content:space-between; align-items:center; font-size:16px; position:relative; z-index:2;">
-    <a href="/" style="color:#F5D485; text-decoration:none; font-weight:600; font-family:'Fraunces',serif;">
-        PacketGuard
-    </a>
-    <div style="display:flex; gap:20px;">
-        <a href="/dashboard" style="color:#FDF6E8; text-decoration:none;">Dashboard</a>
-        <a href="/compare" style="color:#C4B08A; text-decoration:none;">Compare</a>
-        <a href="/about" style="color:#C4B08A; text-decoration:none;">About</a>
-        <a href="/docs" style="color:#C4B08A; text-decoration:none;">Docs</a>
-    </div>
-</nav>
+    <nav>
+        <a href="/" class="brand">PacketGuard</a>
+        <div>
+            <a href="/dashboard" class="active">Dashboard</a>
+            <a href="/compare">Compare</a>
+            <a href="/about">About</a>
+            <a href="/docs">Docs</a>
+        </div>
+    </nav>
     <div class="hero-logo">
         <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#D4A24E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
