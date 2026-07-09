@@ -27,19 +27,19 @@
             background-size: 22px 22px;
             pointer-events: none; z-index: 1;
         }
-        .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 2; }
-        nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 50px; }
-        nav a { color: var(--ink-dim); text-decoration: none; margin-left: 20px; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 44px 24px 90px; position: relative; z-index: 2; }
+        nav { display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 56px; }
+        nav a { color: var(--ink-dim); text-decoration: none; margin-left: 26px; font-weight: 500; }
         nav a.active { color: var(--gold-bright); }
-        .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 600; margin-left: 0 !important; }
+        .brand { color: var(--gold-bright) !important; font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; margin-left: 0 !important; }
 
-        h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 30px; color: var(--ink); margin: 0 0 8px; }
+        h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 42px; color: var(--ink); margin: 0 0 10px; letter-spacing: -0.5px; }
         h1 span { color: var(--gold-bright); font-style: italic; }
-        .subhead { font-size: 12px; color: var(--ink-faint); margin: 0 0 40px; }
+        .subhead { font-size: 15.5px; color: var(--ink-faint); margin: 0 0 46px; }
 
         .card {
             background: var(--panel); border: 1px solid var(--panel-border);
-            border-radius: 4px; padding: 26px; margin-bottom: 18px; position: relative;
+            border-radius: 5px; padding: 34px; margin-bottom: 20px; position: relative;
             box-shadow: 0 10px 24px -16px rgba(0,0,0,0.6);
             transition: transform 0.2s ease;
         }
@@ -52,21 +52,21 @@
         .card:hover { transform: rotate(0deg) translateY(-2px) !important; }
         .card h2 {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
-            color: var(--gold-dim); margin: 0 0 14px; display: flex; align-items: center;
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--gold-dim); margin: 0 0 18px; display: flex; align-items: center;
         }
-        .card p, .card ul { font-size: 13px; color: var(--ink-dim); line-height: 1.8; margin: 0 0 10px; padding-left: 0; }
-        .card ul { padding-left: 18px; }
+        .card p, .card ul { font-size: 15.5px; color: var(--ink-dim); line-height: 1.8; margin: 0 0 12px; padding-left: 0; }
+        .card ul { padding-left: 20px; }
         .card p:last-child, .card ul:last-child { margin-bottom: 0; }
         .card strong { color: var(--ink); }
 
-        details.exp summary { list-style: none; cursor: pointer; color: var(--gold-bright); font-size: 12px; margin-top: 4px; }
+        details.exp summary { list-style: none; cursor: pointer; color: var(--gold-bright); font-size: 14px; font-weight: 600; margin-top: 6px; }
         details.exp summary::-webkit-details-marker { display: none; }
         details.exp summary::before { content: "+ "; }
         details.exp[open] summary::before { content: "– "; }
         details.exp .exp-body {
-            font-size: 12px; color: var(--ink-dim); line-height: 1.7; margin-top: 10px;
-            padding-top: 10px; border-top: 1px solid var(--panel-border);
+            font-size: 14.5px; color: var(--ink-dim); line-height: 1.75; margin-top: 12px;
+            padding-top: 12px; border-top: 1px solid var(--panel-border);
         }
 
         /* Human, not-in-a-line card placement */
